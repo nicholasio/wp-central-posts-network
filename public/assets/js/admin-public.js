@@ -20,15 +20,15 @@
 			        $info.dialog('open');
 			    });
 
-			    $info.dialog({                   
-			        'dialogClass'   : 'wp-dialog',           
+			    $info.dialog({
+			        'dialogClass'   : 'wp-dialog',
 			        'modal'         : true,
-			        'autoOpen'      : false, 
+			        'autoOpen'      : false,
 			        'closeOnEscape' : true,
-			        'width'			: 400,      
+			        'width'			: 400,
 			        'title' 		: 'Informações sobre a sua solicitação',
 			       	'buttons' : [
-			       					{'text' : 'Enviar', 'class' : 'button-primary', 
+			       					{'text' : 'Enviar', 'class' : 'button-primary',
 				       					'click' : function() {
 				       						var post_id = $info.find('input[name=wpcpn-post-id]').val();
 			        						var blog_id = $info.find('input[name=wpcpn-blog-id]').val();
@@ -44,22 +44,21 @@
 													'message' :  reason,
 												},
 												success: function( result ) {
-													console.log(result);
 													if ( result == 1)
 														alert('Solcitação duplicada');
 													else if ( result == 2)
 														alert("Solicitação enviada com sucesso");
-													else 
+													else
 														alert("Erro na sua solicitação")
-													
+
 				       								$(self).dialog('close');
 				       								window.location.reload()
 												},
 												error: function( result ) {
 													alert("Ocorreu algum problema na sua solicitação, tente novamente");
-												}	
+												}
 											});
-				       						
+
 				       					}
 			       					},
 			       					{'text' : 'Fechar', 'class' : '', 'click' : function() { $(this).dialog('close');} }

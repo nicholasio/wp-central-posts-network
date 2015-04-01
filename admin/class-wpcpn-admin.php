@@ -22,7 +22,7 @@ class WPCPN_Admin {
 	 */
 	protected static $instance = null;
 
-	
+
 	/**
 	 * Slug of the plugin screen.
 	 *
@@ -51,8 +51,6 @@ class WPCPN_Admin {
 	 * @since     1.0.0
 	 */
 	private function __construct() {
-		
-
 		$plugin = WPCPN::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
 
@@ -137,17 +135,17 @@ class WPCPN_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_register_script( $this->plugin_slug . '-fast-live-filters', 
+			wp_register_script( $this->plugin_slug . '-fast-live-filters',
 								plugins_url( 'assets/js/jquery-fast-live-filter.js', __FILE__),
 								null,
 								WPCPN::VERSION
 				 			 );
-			wp_enqueue_script( $this->plugin_slug . '-admin-script', 
-							   plugins_url( 'assets/js/admin.js', __FILE__ ), 
-							   array( $this->plugin_slug . '-fast-live-filters','jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-autocomplete' , 'jquery' ), 
-							   WPCPN::VERSION 
+			wp_enqueue_script( $this->plugin_slug . '-admin-script',
+							   plugins_url( 'assets/js/admin.js', __FILE__ ),
+							   array( $this->plugin_slug . '-fast-live-filters','jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-autocomplete' , 'jquery' ),
+							   WPCPN::VERSION
 							);
-			wp_localize_script( $this->plugin_slug . '-admin-script', 'WPCPN_Variables', 
+			wp_localize_script( $this->plugin_slug . '-admin-script', 'WPCPN_Variables',
 								array(
 							    	'nonce' => wp_create_nonce( WPCPN_Admin::NONCE ),
 							    )
@@ -197,7 +195,7 @@ class WPCPN_Admin {
 
 
 
-		
+
 
 	}
 

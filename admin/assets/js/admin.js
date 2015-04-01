@@ -7,16 +7,16 @@
 			SELECTED : 2
 		};
 		var PostsChoose = {
-			$posts_selected  	: '',
-			$posts_to_choose 	: '',
-			$search   		 	: '',
-			$siteChooser     	: '',
-			$btnSavePostList 	: '',
-			$section  		 	: $(".wpcpm-section"),
-			$currentSection  	: '',
-			$ajaxLoader 		: '',
-			currentNamespace 	: '',
-			currentGroup 		: '',
+			$posts_selected	: '',
+			$posts_to_choose	: '',
+			$search			: '',
+			$siteChooser		: '',
+			$btnSavePostList	: '',
+			$section		: $(".wpcpm-section"),
+			$currentSection		: '',
+			$ajaxLoader		: '',
+			currentNamespace	: '',
+			currentGroup		: '',
 
 			init : function() {
 				//Configura a seção atual: a seção atual é a seção onde o mouse está
@@ -34,26 +34,26 @@
 			 * Configura um namespace (section) para interação
 			 */
 			setNameSpace : function(evt) {
-				var $section = $(evt.currentTarget); //A seção atual é a seção onde o mouse está
+				var $section          = $(evt.currentTarget); //A seção atual é a seção onde o mouse está
 				this.currentNamespace = $section.attr('data-namespace');
 				var namespaceSelector = '.wpcpm-section.wpcpn-namespace-' + this.currentNamespace;
 
 				this.$currentSection  = $(namespaceSelector);
-				this.currentGroup 	  = $('.wpcpn-group').attr('id');
+				this.currentGroup     = $('.wpcpn-group').attr('id');
 
-				this.$siteChooser 		= $( namespaceSelector + ' .wpcpn-site-chooser');
-				this.$posts_to_choose 	= $( namespaceSelector + ' .wpcpn-posts-to-choose');
-				this.$posts_selected	= $( namespaceSelector + ' .wpcpn-posts-selected');
-				this.$btnSavePostList	= $( namespaceSelector + ' .wpcpn-save-post-list');
-				this.$search 			= $( namespaceSelector + ' .wpcpn-search');
-				this.$ajaxLoader 		= $( namespaceSelector + ' > .wpcpn-ajax-loader');
+				this.$siteChooser     = $( namespaceSelector + ' .wpcpn-site-chooser');
+				this.$posts_to_choose = $( namespaceSelector + ' .wpcpn-posts-to-choose');
+				this.$posts_selected  = $( namespaceSelector + ' .wpcpn-posts-selected');
+				this.$btnSavePostList = $( namespaceSelector + ' .wpcpn-save-post-list');
+				this.$search          = $( namespaceSelector + ' .wpcpn-search');
+				this.$ajaxLoader      = $( namespaceSelector + ' > .wpcpn-ajax-loader');
 
 				this.initSortableLists();
 
 				/*
 				 * Se algum bind foi realizado, desfaça-o
 				 */
-				if ( this.$posts_selected != '' ) 
+				if ( this.$posts_selected != '' )
 					this.unbind();
 
 				this.bind();
@@ -86,7 +86,7 @@
 			 */
 			initSortableLists: function( ) {
 				this.$posts_selected.sortable({placeholder: "ui-state-highlight"}).disableSelection();
-			}, 	
+			},
 
 			/**
 			 * Realiza a troca de um site para carregar os posts daquele site
@@ -124,7 +124,7 @@
 				var postsList = $(blogIDSelector).html();
 				this.$posts_to_choose.html(postsList);
 
-				
+
 
 				/*var that = this;
 
@@ -147,7 +147,7 @@
 			 */
 			addPostItem : function( evt ) {
 				var $o_li = $(evt.currentTarget).parent();
-				
+
 
 				if ( (typeof $o_li.attr('data-state') == "undefined") ||
 				     $o_li.attr('data-state') ==  elState.NOT_SELECTED ) {
@@ -167,7 +167,7 @@
 							this.$currentSection.attr('data-nposts', (parseInt(nPostsSelected) + 1));
 							canAdd = true;
 						}
-							
+
 					}
 
 					if ( this.$currentSection.attr('data-on-select') == '1' ) {
@@ -188,7 +188,7 @@
 								} else {
 									alert(that.$currentSection.attr('data-on-error'));
 								}
-							}	
+							}
 						});
 					}else {
 						if ( canAdd ) {
@@ -198,20 +198,20 @@
 						}
 					}
 
-					
+
 				}
 
-				return false;	
-				
+				return false;
+
 			},
 			addItem : function($o_li) {
 				var $li = $o_li.clone();
 				$li.find('a').removeClass('dashicons-plus-alt').addClass('dashicons-no');
 				this.$posts_selected.append($li);
 				$o_li.find('a').removeClass('dashicons-plus-alt').addClass('dashicons-yes');
-				//$o_li.css({'border' : '1px solid red'});	
+				//$o_li.css({'border' : '1px solid red'});
 				//$o_li.addClass('ui-state-highlight');
-				$o_li.attr('data-state', elState.SELECTED);	
+				$o_li.attr('data-state', elState.SELECTED);
 			},
 			/**
 			 * Remove um item da lista de posts selecionados
@@ -220,13 +220,13 @@
 				var that = this; //Salva o contexto
 
 				//O botão está dentro da li, portanto temos que pegar o elemento pai
-				var $li = $(evt.currentTarget).parent(); 
-			
+				var $li = $(evt.currentTarget).parent();
+
 				var uid = $li.attr('data-uid');
-				
+
 				//Desaparece com efeito e depois remove o elemento
-				$li.fadeOut('fast', function() { 
-					$(this).remove(); 
+				$li.fadeOut('fast', function() {
+					$(this).remove();
 
 					//Remove o item dentro do namespace atual
 					var namespace = that.$currentSection.attr('data-namespace');
@@ -274,7 +274,7 @@
 					},
 					success: function( result ) {
 						$_ajaxLoader.hide();
-					}	
+					}
 				});
 
 			},
@@ -293,7 +293,7 @@
 
 						var $o_li = $("<li class='ui-state-default' data-uid='"+ uuid +"' data-post-id='" + posts[post_type][i].ID + "'>" + posts[post_type][i].post_title + "<a href='#'>add</a></li>");
 						$o_li.attr('data-state', elState.NOT_SELECTED);
-					
+
 						this.$posts_to_choose.append($o_li);
 					}
 				}
@@ -302,7 +302,7 @@
 		};
 
 		PostsChoose.init();
-	}); 
-	
-		
+	});
+
+
 }(jQuery));

@@ -1,30 +1,24 @@
 <?php
 /**
- * WordPress Central Network Plugin
+ * WordPress Central Posts Network
  *
- * Um plugin que adiciona uma página interna a um determinado site em uma rede multi-site e
- * permite resgatar posts de outros sites na mesma rede.
- *
- * @TODO English description
  *
  * @package   WPPCN
- * @author    Nícholas André <nicholasandre@ufersa.com.br>
+ * @author    Nícholas André <nicholas@iotecnologia.com.br>
  * @license   GPL-2.0+
- * @link      http://example.com
- * @copyright 2014 UFERSA - Universidade Federal Rural do Semi-Árido
+ * @link      https://github.com/nicholasio/wp-central-posts-network
  *
  * @wordpress-plugin
- * Plugin Name:       WordPress Central Network Plugin
- * Plugin URI:        @TODO
- * Description:       Um plugin que adiciona uma página interna a um determinado site em uma rede multi-site e
- * 					  permite resgatar posts de outros sites na mesma rede.
- * Version:           1.0.2
- * Author:            Nícholas André
- * Author URI:        
- * Text Domain:       plugin-name-locale
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Domain Path:       /languages
+ * Plugin Name: 	WordPress Central Posts Network
+ * Plugin URI: 		https://github.com/nicholasio/wp-central-posts-network
+ * Description: 		A Plugin that let you choose any posts on any site in the network to display on the main site.
+ * Version: 		0.5
+ * Author: 		Nícholas André
+ * Author URI:		http://nicholasandre.com.br
+ * Text Domain:		wpcpn
+ * License: 		GPL-2.0+
+ * License URI:		http://www.gnu.org/licenses/gpl-2.0.txt
+ * Domain Path: 	/languages
  *
  */
 
@@ -64,11 +58,9 @@ add_action( 'plugins_loaded', array( 'WPCPN', 'get_instance' ) );
  *----------------------------------------------------------------------------*/
 
 /**
- * O painel administrativo só deve ser disponibilizado para um super admin rodando no site principal (cujo ID é 1)
+ * The administrative panel must only be show for super admin users running on the main site
  */
 if ( is_admin() && WPCPN_IS_MAIN_SITE) {
-
 	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-wpcpn-admin.php' );
 	add_action( 'after_setup_theme', array( 'WPCPN_Admin', 'get_instance' ) );
-
 }

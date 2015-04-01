@@ -1,16 +1,15 @@
 <?php
-
 /**
  *
  * @package WPCPN_Public
- * @author  Nícholas André <nicholasandre@ufersa.edu.br>
+ * @author  Nícholas André <nicholas@iotecnologia.com.br>
  */
 
 class WPCPN_Admin_Public_Model {
 
-	const TABLE_SUFFIX = 'wpcpn_featured_requests';
-	const REQUEST_DUPLICATE = 1;
-	const REQUEST_OK 		= 2;
+	const TABLE_SUFFIX		= 'wpcpn_featured_requests';
+	const REQUEST_DUPLICATE	= 1;
+	const REQUEST_OK		= 2;
 	const REQUEST_ERROR		= 3;
 
 
@@ -44,21 +43,21 @@ class WPCPN_Admin_Public_Model {
 	}
 
 	public static function insert_request( $blog_id, $post_id, $message ) {
-		global $wpdb; 
-		
+		global $wpdb;
+
 		$count = $wpdb->get_var(
-		 	$wpdb->prepare('SELECT COUNT(ID) FROM ' . self::get_table_name() . ' WHERE blog_id = %d AND post_id = %d' , 
+		 	$wpdb->prepare('SELECT COUNT(ID) FROM ' . self::get_table_name() . ' WHERE blog_id = %d AND post_id = %d' ,
 		 		array(
 		 			$blog_id,
 		 			$post_id
 		 		)
-		 	) 
+		 	)
 		);
 
 		if ( $count > 0 ) {
 			return self::REQUEST_DUPLICATE;
-		} else {	
-			$wpdb->insert( self::get_table_name(), 
+		} else {
+			$wpdb->insert( self::get_table_name(),
 				array(
 					'blog_id' => $blog_id,
 					'post_id' => $post_id,
@@ -78,7 +77,7 @@ class WPCPN_Admin_Public_Model {
 	/**
 	 * Atualiza o status de uma solicitação pendente para aprovado
 	 * @param  int $blog_id ID do blog
-	 * @param  int $post_id ID do post solicitante 
+	 * @param  int $post_id ID do post solicitante
 	 */
 	public static function approve( $blog_id, $post_id ) {
 		return self::change_status( 'AP', $blog_id, $post_id );
@@ -87,7 +86,7 @@ class WPCPN_Admin_Public_Model {
 	/**
 	 * Marca o status da solicitação como publicado
 	 * @param  int $blog_id ID do blog
-	 * @param  int $post_id ID do post solicitante 
+	 * @param  int $post_id ID do post solicitante
 	 */
 	public static function publish( $blog_id, $post_id ) {
 		return self::change_status( 'PB', $blog_id, $post_id );
@@ -100,7 +99,7 @@ class WPCPN_Admin_Public_Model {
 	 * @param  int $post_id    ID do Post
 	 */
 	public static function change_status( $status, $blog_id , $post_id ) {
-		
+
 		if ( ! in_array( $status, array('AP', 'AW', 'RJ', 'PB') ) )
 			return false;
 
@@ -119,7 +118,7 @@ class WPCPN_Admin_Public_Model {
 		}
 
 		global $wpdb;
-		$wpdb->update( self::get_table_name(), 
+		$wpdb->update( self::get_table_name(),
 			$values,
 			array(
 				'post_id' => $post_id,
@@ -136,22 +135,22 @@ class WPCPN_Admin_Public_Model {
 	}
 
 	public function get_request( $blog_id, $post_id ) {
-		
+
 		global $wpdb;
 		$row = $wpdb->get_row(
-		 	$wpdb->prepare('SELECT * FROM ' . self::get_table_name()  . ' WHERE blog_id = %d AND post_id = %d', 
+		 	$wpdb->prepare('SELECT * FROM ' . self::get_table_name()  . ' WHERE blog_id = %d AND post_id = %d',
 		 		array(
 		 			$blog_id,
 		 			$post_id
 		 		)
-		 	) 
+		 	)
 		);
 
 		return $row;
 	}
 
 	/**
-	 * Retorna o nome da tabela que armazena as solicitações	
+	 * Retorna o nome da tabela que armazena as solicitações
 	 * @return string Table Name
 	 */
 	public static function get_table_name() {
@@ -160,5 +159,5 @@ class WPCPN_Admin_Public_Model {
 		return $wpdb->base_prefix . self::TABLE_SUFFIX;
 	}
 
-	
+
 }

@@ -1,24 +1,18 @@
 <?php
 /**
- * WordPress Central Network posts
+ * WordPress Central Posts Network
  *
  * @package   WPCPN
- * @author    Nícholas André <nicholasandre@ufersa.edu.br>
+ * @author    Nícholas André <nicholas@iotecnologia.com.br>
  * @license   GPL-2.0+
- * @link      
- * @copyright 2014 UFERSA
  */
 
 /**
- * Plugin class. This class should ideally be used to work with the
- * public-facing side of the WordPress site.
- *
- * If you're interested in introducing administrative or dashboard
- * functionality, then refer to `class-plugin-name-admin.php`
+ * Main Plugin Class
  *
  *
  * @package WPCPN
- * @author  Nícholas André <nicholasandre@ufersa.edu.br>
+ * @author  Nícholas André <nicholas@iotecnologia.com.br>
  */
 class WPCPN {
 
@@ -29,10 +23,10 @@ class WPCPN {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.0.0';
+	const VERSION = '0.5';
 
 	/**
-	 * 
+	 *
 	 *
 	 * Unique identifier for your plugin.
 	 *
@@ -56,6 +50,10 @@ class WPCPN {
 	 */
 	protected static $instance = null;
 
+	/**
+	 * Instance of the model class
+	 * @var object
+	 */
 	public $model = null;
 
 	/**
@@ -65,8 +63,6 @@ class WPCPN {
 	 * @since     1.0.0
 	 */
 	private function __construct() {
-
-		// Load plugin text domain
 		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'template_redirect', array( $this, 'template_redirect' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars') );
@@ -80,9 +76,9 @@ class WPCPN {
 				add_filter( 'post_row_actions', array( $this, 'post_row_actions') );
 				add_filter( 'manage_edit-post_columns', array($this, 'add_post_columns') );
 				add_action( 'manage_posts_custom_column' , array( $this, 'post_custom_columns' ) );
-				add_filter( 'manage_edit-post_sortable_columns', array( $this, 'post_sortable_columns') );	
+				add_filter( 'manage_edit-post_sortable_columns', array( $this, 'post_sortable_columns') );
 			}
-			
+
 		}
 
 		if ( is_admin() ) {
@@ -90,8 +86,8 @@ class WPCPN {
 			add_action('admin_footer', array( $this, 'admin_footer') );
 			$this->model = new WPCPN_Admin_Public_Model();
 		}
-			
-			
+
+
 
 		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
@@ -147,7 +143,7 @@ class WPCPN {
 			self::main_single_activate();
 			self::install_tables();
 			restore_current_blog();
-			
+
 		} else {
 			echo "<p>Você precisa do Multisite Habilitado</p>";
 			die();
@@ -164,7 +160,7 @@ class WPCPN {
 	 *                                       WPMU is disabled or plugin is
 	 *                                       deactivated on an individual blog.
 	 */
-	public static function deactivate( $network_wide ) { 
+	public static function deactivate( $network_wide ) {
 
 		if ( $network_wide ) {
 			// Get all blog ids
@@ -178,7 +174,7 @@ class WPCPN {
 			self::single_deactivate();
 		}
 
-		
+
 	 }
 
 	/**
@@ -200,7 +196,7 @@ class WPCPN {
 	public function activate_new_site( $blog_id ) { }
 
 	/**
-	 * Instala as tabelas requeridas pelo plugin no banco de dados
+	 * Install tables used by the plugin
 	 * @return none
 	 */
 	public static function install_tables() {
@@ -268,9 +264,8 @@ class WPCPN {
 		add_rewrite_rule('portal/search/([^/]+)/?', 'index.php?wpcpn_query_type=search&wpcpn_network_search=$matches[1]', 'top');
 
 		//Regras para taxonomias
-		add_rewrite_rule('portal/categoria/([^/]+)/page/?([0-9]{1,})/?$', 	'index.php?wpcpn_query_type=taxonomy&wpcpn_network_tax=category&wpcpn_network_term=$matches[1]&paged=$matches[2]' , 'top');
+		add_rewrite_rule('portal/categoria/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?wpcpn_query_type=taxonomy&wpcpn_network_tax=category&wpcpn_network_term=$matches[1]&paged=$matches[2]' , 'top');
 		add_rewrite_rule('portal/categoria/([^/]+)/?', 	'index.php?wpcpn_query_type=taxonomy&wpcpn_network_tax=category&wpcpn_network_term=$matches[1]' , 'top');
-		
 
 		add_rewrite_rule('portal/([^/]+)/([^/]+)/page/?([0-9]{1,})/?$', 	'index.php?wpcpn_query_type=taxonomy&wpcpn_network_tax=$matches[1]&wpcpn_network_term=$matches[2]&paged=$matches[3]' , 'top');
 		add_rewrite_rule('portal/([^/]+)/([^/]+)/?', 	'index.php?wpcpn_query_type=taxonomy&wpcpn_network_tax=$matches[1]&wpcpn_network_term=$matches[2]' , 'top');
@@ -286,10 +281,8 @@ class WPCPN {
 	public function admin_enqueue_scripts() {
 		global $pagenow;
 		if ( $pagenow == 'edit.php' ) {
-			wp_enqueue_script (  'wpcpn_requisition_modal' ,       
-                        plugins_url( 'assets/js/admin-public.js' , __FILE__)  ,       
-                        array('jquery-ui-dialog')); 
-		                   
+			wp_enqueue_script (  'wpcpn_requisition_modal' , plugins_url( 'assets/js/admin-public.js' , __FILE__),  array('jquery-ui-dialog'));
+
 		    wp_enqueue_style (  'wp-jquery-ui-dialog');
 		}
 	}
@@ -339,7 +332,7 @@ class WPCPN {
 	public function category_link( $catlink, $catid ) {
 		$term_obj = get_term($catid, 'category');
 		return get_site_url( 1 ) . '/portal/categoria/' . $term_obj->slug;
-	} 
+	}
 
 	/**
 	 * Filtra os links que são exibidos abaixo de cada post na listagem de posts
@@ -378,9 +371,9 @@ class WPCPN {
 						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span> <br />Aprovado (Mas não publicada)<br />Solicitado em ' . date('d/m/Y H:i:s', strtotime($request->created) );
 					else if ( $request->status == 'AP' && $request->published != '0000-00-00 00:00:00')
 						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span> <br />Publicado no passado: ' . date('d/m/Y H:i:s', strtotime($request->published) );
-					else if ( $request->status == 'PB' ) 
+					else if ( $request->status == 'PB' )
 						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span><span title="Publicado" class="dashicons dashicons-admin-home"></span> <br />Aprovado e Publicado.<br /> Publicado em ' . date('d/m/Y H:i:s', strtotime($request->published));
-					else if ( $request->status == 'RJ' ) 
+					else if ( $request->status == 'RJ' )
 						echo '<span class="dashicons dashicons-no" title="Rejeitado"></span><br /> <span style="color: red">Rejeitado</span> <br /> Solicitiado em ' . date('d/m/Y H:i:s', strtotime($request->created));
 				}
 
@@ -427,11 +420,9 @@ class WPCPN {
 
 				break;
 				case 'search':
-
 					if ( locate_template("wpcpn-network-search.php") ) {
 						include(locate_template("wpcpn-network-search.php"));
 					}
-
 				break;
 			}
 
@@ -454,11 +445,11 @@ class WPCPN {
 			case 'taxonomy':
 				$wpcpn_posts = wpcpn_get_network_posts(
 					array(
-						'taxonomy_slug' => esc_sql( get_query_var('wpcpn_network_tax') ), 
+						'taxonomy_slug' => esc_sql( get_query_var('wpcpn_network_tax') ),
 						'term_slug' 	=> esc_sql( get_query_var('wpcpn_network_term') ),
 						'size'			=> 10,
-						'paged'			=> max(1, get_query_var('paged') ) 
-					) 
+						'paged'			=> max(1, get_query_var('paged') )
+					)
 				);
 			break;
 			case 'search':
@@ -509,13 +500,13 @@ function wpcpn_get_grouped_posts_list( $group_name, $section_name ) {
 function wpcpn_get_posts_list( $group_name, $section_name ) {
 	$arrPosts = wpcpn_get_grouped_posts_list( $group_name, $section_name );
 
-	if ( ! isset($arrPosts['posts']) ||  ! is_array($arrPosts['posts']) ) return false; 
+	if ( ! isset($arrPosts['posts']) ||  ! is_array($arrPosts['posts']) ) return false;
 	$nonGrouped = array();
 	foreach($arrPosts['posts'] as $site_id => $site_posts) {
 		foreach ($site_posts as $post_id) {
 			$nonGrouped[] = array('post_id' => $post_id, 'site_id' => $site_id);
 		}
-	} 
+	}
 
 	return $nonGrouped;
 }
@@ -526,7 +517,7 @@ function wpcpn_get_posts_list( $group_name, $section_name ) {
 function wpcpn_show_posts_section( $group_name, $section_name, Array $template, $params = array() )  {
 	/*$slug		= $template['template_slug'];
 	$name		= isset($template['template_name']) ? $template['template_name'] : '';*/
-	
+
 	$section	= wpcpn_get_posts_section( $group_name, $section_name, $params );
 
 	if ( $section ) {
@@ -541,7 +532,7 @@ function wpcpn_show_posts_section( $group_name, $section_name, Array $template, 
 	        wp_reset_postdata();
 	        restore_current_blog();
 	    }*/
-	    wpcpn_show_posts($section, $template);	
+	    wpcpn_show_posts($section, $template);
 	} else {
 		echo '<p>Seção não definida.</p>';
 	}
@@ -572,7 +563,7 @@ function wpcpn_get_posts_section(  $group_name, $section_name, $params = array()
 		return false;
 	}
 
-	$params 	= wp_parse_args($params, 
+	$params 	= wp_parse_args($params,
 					array(
 						'limit' => count($section),
 						'offset' => 0
