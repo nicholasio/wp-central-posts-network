@@ -15,6 +15,7 @@
  * @author  Nícholas André <nicholas@iotecnologia.com.br>
  */
 class WPCPN {
+	use WPCPN_Singleton;
 
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
@@ -41,20 +42,6 @@ class WPCPN {
 	 */
 	protected $plugin_slug = 'wpcpn';
 
-	/**
-	 * Instance of this class.
-	 *
-	 * @since    1.0.0
-	 *
-	 * @var      object
-	 */
-	protected static $instance = null;
-
-	/**
-	 * Instance of the model class
-	 * @var object
-	 */
-	public $model = null;
 
 	/**
 	 * Initialize the plugin by setting localization and loading public scripts
@@ -67,26 +54,6 @@ class WPCPN {
 		add_action( 'template_redirect', array( $this, 'template_redirect' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars') );
 		add_filter( 'category_link', array( $this, 'category_link'), 10, 2);
-
-		if ( get_current_blog_id() != 1 ) {
-			//@TODO Usar o filtro wpcpn_activate_feature_requests
-			$status = false;
-
-			if ( $status ) {
-				add_filter( 'post_row_actions', array( $this, 'post_row_actions') );
-				add_filter( 'manage_edit-post_columns', array($this, 'add_post_columns') );
-				add_action( 'manage_posts_custom_column' , array( $this, 'post_custom_columns' ) );
-				add_filter( 'manage_edit-post_sortable_columns', array( $this, 'post_sortable_columns') );
-			}
-
-		}
-
-		if ( is_admin() ) {
-			add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts') );
-			add_action('admin_footer', array( $this, 'admin_footer') );
-			$this->model = new WPCPN_Admin_Public_Model();
-		}
-
 
 
 		// Activate plugin when new blog is added
@@ -107,23 +74,6 @@ class WPCPN {
 	 */
 	public function get_plugin_slug() {
 		return $this->plugin_slug;
-	}
-
-	/**
-	 * Return an instance of this class.
-	 *
-	 * @since     1.0.0
-	 *
-	 * @return    object    A single instance of this class.
-	 */
-	public static function get_instance() {
-
-		// If the single instance hasn't been set, set it now.
-		if ( null == self::$instance ) {
-			self::$instance = new self;
-		}
-
-		return self::$instance;
 	}
 
 	/**
@@ -278,35 +228,7 @@ class WPCPN {
 		$this->load_plugin_textdomain();
 	}
 
-	public function admin_enqueue_scripts() {
-		global $pagenow;
-		if ( $pagenow == 'edit.php' ) {
-			wp_enqueue_script (  'wpcpn_requisition_modal' , plugins_url( 'assets/js/admin-public.js' , __FILE__),  array('jquery-ui-dialog'));
 
-		    wp_enqueue_style (  'wp-jquery-ui-dialog');
-		}
-	}
-
-	public function admin_footer() {
-		ob_start();
-		?>
-		<div style="display:none" id="wpcpn-modal-content">
-			<h3>Você está solicitando destaque para o post:</h3>
-			<h4 class="wpcpn-post-title">"<span></span>"</h4>
-			<p>Por Favor, descreva os motivos da sua solicitação.
-				Esta solicitação não irá colocar a notícias automaticamente na página inicial, ela
-				precisa ser aprovada por um administrador do portal.</p>
-			<p>As notícias podem sofrer alterações pela ASSECOM antes de ir para a página principal.</p>
-			<h3>Motivo:</h3>
-			<input type="hidden" name="wpcpn-post-id" value="" />
-			<input type="hidden" name="wpcpn-blog-id" value="" />
-
-			<textarea name="wpcpn-request-reason-text" class="wpcpn-request-reason-text" cols="30" rows="10"></textarea>
-		</div>
-		<?php
-		$content = ob_get_contents();
-		echo $content;
-	}
 
 	/**
 	 * Load the plugin text domain for translation.
@@ -334,58 +256,7 @@ class WPCPN {
 		return get_site_url( 1 ) . '/portal/categoria/' . $term_obj->slug;
 	}
 
-	/**
-	 * Filtra os links que são exibidos abaixo de cada post na listagem de posts
-	 * Função callback para o filtro post_row_actions
-	 * @see  WPCPN::__construct()
-	 * @param  Array $actions Contém todos os links
-	 * @return Array          Array contendo os links modificados
-	 */
-	public function post_row_actions( $actions ) {
-		$actions['wpcpn_feature'] = '<a href="#" class="wpcpn-open-modal" data-wpcpn-post-title="'.get_the_title().'" data-wpcpn-post-id="' . get_the_ID() . '" data-wpcpn-blog-id="' . get_current_blog_id() . '">Solicitar Destaque na Home</a>';
-		return $actions;
-	}
 
-	public function add_post_columns( $columns ) {
-	 	$column_meta = array( 'wpcpn_requests' => 'Status da Solicitação de Destaque' );
-		$columns = array_slice( $columns, 0, 2, true ) + $column_meta + array_slice( $columns, 2, NULL, true );
-		return $columns;
-	}
-
-	public function post_custom_columns( $column ) {
-		global $post;
-
-		$blog_id = get_current_blog_id();
-		$post_id = $post->ID;
-		switch ( $column ) {
-			case 'wpcpn_requests':
-				$request = WPCPN_Admin_Public_Model::get_request($blog_id, $post_id);
-
-				if ( $request == NULL )
-					echo 'Não Solicitado';
-				else {
-
-					if ( $request->status == 'AW' )
-						echo '<span class="dashicons dashicons-visibility" title="Aguardando Análise"></span> <br />Aguardando Análise. </br> Solicitado em ' . date('d/m/Y H:i:s', strtotime($request->created));
-					else if ( $request->status == 'AP' && $request->published == '0000-00-00 00:00:00')
-						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span> <br />Aprovado (Mas não publicada)<br />Solicitado em ' . date('d/m/Y H:i:s', strtotime($request->created) );
-					else if ( $request->status == 'AP' && $request->published != '0000-00-00 00:00:00')
-						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span> <br />Publicado no passado: ' . date('d/m/Y H:i:s', strtotime($request->published) );
-					else if ( $request->status == 'PB' )
-						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span><span title="Publicado" class="dashicons dashicons-admin-home"></span> <br />Aprovado e Publicado.<br /> Publicado em ' . date('d/m/Y H:i:s', strtotime($request->published));
-					else if ( $request->status == 'RJ' )
-						echo '<span class="dashicons dashicons-no" title="Rejeitado"></span><br /> <span style="color: red">Rejeitado</span> <br /> Solicitiado em ' . date('d/m/Y H:i:s', strtotime($request->created));
-				}
-
-
-			break;
-		}
-	}
-
-	public function post_sortable_columns( $columns ) {
-		$columns['wpcpn_requests'] = 'Status da Solicitação de Destaque';
-		return $columns;
-	}
 	/**
 	 * Define nossas próprias query_vars
 	 * @param  array $vars query_vars que já estão registradas

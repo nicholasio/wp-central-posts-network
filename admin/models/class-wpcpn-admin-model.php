@@ -41,10 +41,10 @@ class WPCPN_Admin_Model {
 	/**
 	 * Popula o array $arrPosts
 	 *
-	 * $arrPosts = array( BLOG_ID_1 => 
-	 *						array( POST_TYPE_1 => array(....), 
-	 * 							... , 
-	 *					   		POST_TYPE_N => array( .... ) 
+	 * $arrPosts = array( BLOG_ID_1 =>
+	 *						array( POST_TYPE_1 => array(....),
+	 * 							... ,
+	 *					   		POST_TYPE_N => array( .... )
 	 *						),
 	 *						BLOG_ID_N => ....
 	 *				);
@@ -55,14 +55,14 @@ class WPCPN_Admin_Model {
 		wp_suspend_cache_addition();
 
 		$arrPosts = array();
-		
+
 		foreach( $this->blogs_ids as $blog_id ) {
 			if ( $blog_id == 1 ) continue; //Pula o site principal
 
 			$arrPosts[$blog_id]  = array();
 
 			//Não é uma requisição ajax e não restaure o blog corrente
-			$arrPosts[$blog_id]  = self::_getPostsFromBlog($blog_id, false, false); 
+			$arrPosts[$blog_id]  = self::_getPostsFromBlog($blog_id, false, false);
 		}
 
 		//Restaura para o site principal
@@ -76,10 +76,10 @@ class WPCPN_Admin_Model {
 	 * atende tanto a uma chamada normal, como uma requisição ajax
 	 *
 	 * $arrPosts = array(
-	 *					array( POST_TYPE_1 => array(....), 
-	 * 						... , 
-	 *					   	POST_TYPE_N => array( .... ) 
-	 *					)		
+	 *					array( POST_TYPE_1 => array(....),
+	 * 						... ,
+	 *					   	POST_TYPE_N => array( .... )
+	 *					)
 	 *				);
 	 * @since     1.0.0
 	 */
@@ -93,10 +93,10 @@ class WPCPN_Admin_Model {
 		$post_types = get_post_types( array( 'public' => true ) );
 		unset($post_types['attachment']);
 		$post_types = apply_filters('wpcpn_set_post_types', $post_types);
-		
-	
+
+
 		foreach( $post_types as $post_type ) {
-			
+
 			$posts = get_posts(
 				array(
 					'post_type' 		=> $post_type,
@@ -107,7 +107,7 @@ class WPCPN_Admin_Model {
 
 
 			$arrPosts[$post_type] = $posts;
-			
+
 		}
 
 		/*if ($restore_current_blog)
@@ -120,10 +120,10 @@ class WPCPN_Admin_Model {
 		}
 
 		return $arrPosts;
-			
+
 	}
 
-	public static function getPostsFromBlog($blog_id = null) {		
+	public static function getPostsFromBlog($blog_id = null) {
 		self::_getPostsFromBlog($blog_id, true, true);
 	}
 
@@ -152,7 +152,7 @@ class WPCPN_Admin_Model {
 		//Seta todos os posts já salvos que tenham solicitações como Aprovados
 		foreach ($old_posts['posts'] as $blog_id =>  $_old_posts) {
 			foreach ($_old_posts as $blog_post) {
-				WPCPN_Admin_Public_Model::approve( $blog_id, $blog_post );
+				WPCPN_Requests::approve( $blog_id, $blog_post );
 			}
 		}
 
@@ -169,20 +169,20 @@ class WPCPN_Admin_Model {
 				$arrPosts['posts'][$pieces[0]][] = (int) $pieces[1];
 
 				//Se tiver alguma solicitação pendente deste post, atualize o status para publicado
-				if ( ! WPCPN_Admin_Public_Model::get_request($pieces[0], $pieces[1]) ) {
-					WPCPN_Admin_Public_Model::insert_request($pieces[0], $pieces[1], 'Publicado na página principal pela ASSECOM sem solicitação');
+				if ( ! WPCPN_Requests::get_request($pieces[0], $pieces[1]) ) {
+					WPCPN_Requests::insert_request($pieces[0], $pieces[1], 'Publicado na página principal pela ASSECOM sem solicitação');
 				}
-				
-				WPCPN_Admin_Public_Model::publish($pieces[0], $pieces[1]);
+
+				WPCPN_Requests::publish($pieces[0], $pieces[1]);
 
 				$count++;
-			}	
+			}
 		}
 		$arrPosts['count'] = $count;
 
-		
 
-		
+
+
 		update_option($meta_key, $arrPosts);
 
 		do_action("wpcpn_posts_list_{$group}_{$section}");
@@ -197,7 +197,7 @@ class WPCPN_Admin_Model {
 	public static function getPostsLists( $group, $sectionSlug ) {
 		$postLists =  get_option(WPCPN_Admin_Model::META_KEY . $group . '_' . $sectionSlug);
 
-		if ( ! $postLists ) 
+		if ( ! $postLists )
 			return array('count' => 0);
 
 		return $postLists;

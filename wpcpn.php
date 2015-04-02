@@ -31,15 +31,17 @@ define('WPCPN_CAN_ADD_POST', 1);
 define('WPCPN_CANT_ADD_POST', 0);
 define('WPCPN_IS_MAIN_SITE', get_current_blog_id() == 1 );
 
+require_once( plugin_dir_path( __FILE__ ) . 'includes/trait-singleton.php');
 require_once( plugin_dir_path( __FILE__ ) . 'includes/WPCPN_Fragment_Cache.php');
 require_once( plugin_dir_path( __FILE__ ) . 'admin/models/class-wpcpn-admin-model.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'admin/models/class-wpcpn-requests.php');
+require_once( plugin_dir_path( __FILE__ ) . 'admin/class-post-selector.php');
 require_once( plugin_dir_path( __FILE__ ) . 'includes/network_queries.php' );
 
 /*----------------------------------------------------------------------------*
  * Public-Facing Functionality
  *----------------------------------------------------------------------------*/
 require_once( plugin_dir_path( __FILE__ ) . 'public/includes/functions.php');
-require_once( plugin_dir_path( __FILE__ ) . 'public/models/class-wpcpn-admin-public-model.php');
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-wpcpn.php' );
 
 /*
@@ -60,7 +62,7 @@ add_action( 'plugins_loaded', array( 'WPCPN', 'get_instance' ) );
 /**
  * The administrative panel must only be show for super admin users running on the main site
  */
-if ( is_admin() && WPCPN_IS_MAIN_SITE) {
+if ( is_admin() ) {
 	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-wpcpn-admin.php' );
 	add_action( 'after_setup_theme', array( 'WPCPN_Admin', 'get_instance' ) );
 }

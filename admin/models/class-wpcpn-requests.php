@@ -5,7 +5,7 @@
  * @author  Nícholas André <nicholas@iotecnologia.com.br>
  */
 
-class WPCPN_Admin_Public_Model {
+class WPCPN_Requests {
 
 	const TABLE_SUFFIX		= 'wpcpn_featured_requests';
 	const REQUEST_DUPLICATE	= 1;
@@ -19,7 +19,7 @@ class WPCPN_Admin_Public_Model {
 	 * @since     1.0.0
 	 */
 	public function __construct() {
-		add_action('wp_ajax_wpcpn_send_featured_request', 'WPCPN_Admin_Public_Model::send_featured_request');
+		add_action('wp_ajax_wpcpn_send_featured_request', 'WPCPN_Requests::send_featured_request');
 	}
 
 	/**

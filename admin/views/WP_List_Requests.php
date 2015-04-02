@@ -22,7 +22,7 @@ Class WP_List_Requests extends WP_List_Table {
 			'message' => 'Mensagem',
 			'created'  => 'Data da solicitação',
 			'published' => 'Data da publicação',
-			
+
 			'status' => 'Status',
 			'actions' => 'Ações'
 		);
@@ -37,14 +37,14 @@ Class WP_List_Requests extends WP_List_Table {
 
 	public function get_data($per_page, $current_page) {
 		global $wpdb;
-		$tableName = WPCPN_Admin_Public_Model::get_table_name();
+		$tableName = WPCPN_Requests::get_table_name();
 		$limit = "LIMIT " . ($current_page-1) * $per_page . "," . $per_page;
 
 		$sql = "SELECT * FROM {$tableName} WHERE published = '0000-00-00 00:00:00' OR ( status != 'AP' AND published != '0000-00-00 00:00:00') ORDER BY ID DESC {$limit}";
 
-		if ( ! $this->recents ) 
+		if ( ! $this->recents )
 			$sql = "SELECT * FROM {$tableName} WHERE published != '0000-00-00 00:00:00' AND status = 'AP' ORDER BY ID DESC {$limit}";
-		
+
 
 		return $wpdb->get_results(
 			$sql
@@ -53,13 +53,13 @@ Class WP_List_Requests extends WP_List_Table {
 
 	public function get_total_items() {
 		global $wpdb;
-		$tableName = WPCPN_Admin_Public_Model::get_table_name();
+		$tableName = WPCPN_Requests::get_table_name();
 
 		$sql = "SELECT COUNT(ID) FROM {$tableName} WHERE published = '0000-00-00 00:00:00' OR ( status != 'AP' AND published != '0000-00-00 00:00:00') ORDER BY ID DESC";
 
-		if ( ! $this->recents ) 
+		if ( ! $this->recents )
 			$sql = "SELECT COUNT(ID) FROM {$tableName} WHERE published != '0000-00-00 00:00:00' AND status = 'AP' ORDER BY ID DESC";
-		
+
 
 		return $wpdb->get_var(
 			$sql
@@ -77,7 +77,7 @@ Class WP_List_Requests extends WP_List_Table {
 		$total_items = $this->get_total_items();
 
 		$this->items = $this->get_data($per_page, $current_page);
-	
+
 		$this->set_pagination_args( array(
 		    'total_items' => $total_items,                  //WE have to calculate the total number of items
 		    'per_page'    => $per_page                     //WE have to determine how many items to show on a page
@@ -112,7 +112,7 @@ Class WP_List_Requests extends WP_List_Table {
 				restore_current_blog();
 
 				return "<strong>{$blogname}</strong> <br /> <a target='_blank' href='{$url}'> Ver Site</a> | <a target='_blank' href='{$admin_url}'>Ver Painel</a>";
-				
+
 			break;
 			case 'status':
 				switch( $value ) {

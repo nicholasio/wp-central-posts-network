@@ -11,28 +11,9 @@
 
 class WPCPN_Admin {
 
+	use WPCPN_Singleton;
+
 	const NONCE = 'wpcpn_nonce_form';
-
-	/**
-	 * Instance of this class.
-	 *
-	 * @since    1.0.0
-	 *
-	 * @var      object
-	 */
-	protected static $instance = null;
-
-
-	/**
-	 * Slug of the plugin screen.
-	 *
-	 * @since    1.0.0
-	 *
-	 * @var      string
-	 */
-	protected $plugin_screen_hook_suffix = null;
-
-	protected $plugin_screen_sub_hook_suffix = null;
 
 	/**
 	 * Holds a reference to the model class
@@ -42,6 +23,8 @@ class WPCPN_Admin {
 	 * @var      Model
 	 */
 	public $model = null;
+
+	public $post_selector;
 
 
 	/**
@@ -58,39 +41,100 @@ class WPCPN_Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
-		// Add the options page and menu item.
-		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
 
 		// Add an action link pointing to the options page.
 		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->plugin_slug . '.php' );
 		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
-		add_action( 'wp_ajax_wpcpn_get_posts_from_blog' , 'WPCPN_Admin_Model::getPostsFromBlog' );
-		add_action( 'wp_ajax_wpcpn_save_posts_list', 'WPCPN_Admin_Model::savePostsList');
+
+
+		$status = apply_filters('wpcpn_activate_feature_requests', true );
+		if ( get_current_blog_id() != 1 && $status ) {
+				add_filter( 'post_row_actions', array( $this, 'post_row_actions') );
+				add_filter( 'manage_edit-post_columns', array($this, 'add_post_columns') );
+				add_action( 'manage_posts_custom_column' , array( $this, 'post_custom_columns' ) );
+				add_filter( 'manage_edit-post_sortable_columns', array( $this, 'post_sortable_columns') );
+				add_action( 'admin_footer', array($this, 'admin_footer') );
+		}
+
+		if ( WPCPN_IS_MAIN_SITE && current_user_can('manage_network') ) {
+			$this->post_selector = new WPCPN_Post_Selector();
+		}
 	}
 
 	/**
-	 * Return an instance of this class.
-	 *
-	 * @since     1.0.0
-	 *
-	 * @return    object    A single instance of this class.
+	 * Filtra os links que são exibidos abaixo de cada post na listagem de posts
+	 * Função callback para o filtro post_row_actions
+	 * @see  WPCPN::__construct()
+	 * @param  Array $actions Contém todos os links
+	 * @return Array          Array contendo os links modificados
 	 */
-	public static function get_instance() {
-
-		/*
-		 * A parte administrativa só deve ser utilizado por Super Admins e no site principal da rede
-		 */
-		if( /*is_super_admin() || */ ! WPCPN_IS_MAIN_SITE ) {
-			return;
-		}
-
-		// If the single instance hasn't been set, set it now.
-		if ( null == self::$instance ) {
-			self::$instance = new self;
-		}
-
-		return self::$instance;
+	public function post_row_actions( $actions ) {
+		$actions['wpcpn_feature'] = '<a href="#" class="wpcpn-open-modal" data-wpcpn-post-title="'.get_the_title().'" data-wpcpn-post-id="' . get_the_ID() . '" data-wpcpn-blog-id="' . get_current_blog_id() . '">Solicitar Destaque na Home</a>';
+		return $actions;
 	}
+
+	public function add_post_columns( $columns ) {
+	 	$column_meta = array( 'wpcpn_requests' => 'Status da Solicitação de Destaque' );
+		$columns = array_slice( $columns, 0, 2, true ) + $column_meta + array_slice( $columns, 2, NULL, true );
+		return $columns;
+	}
+
+	public function post_custom_columns( $column ) {
+		global $post;
+
+		$blog_id = get_current_blog_id();
+		$post_id = $post->ID;
+		switch ( $column ) {
+			case 'wpcpn_requests':
+				$request = WPCPN_Requests::get_request($blog_id, $post_id);
+
+				if ( $request == NULL )
+					echo 'Não Solicitado';
+				else {
+
+					if ( $request->status == 'AW' )
+						echo '<span class="dashicons dashicons-visibility" title="Aguardando Análise"></span> <br />Aguardando Análise. </br> Solicitado em ' . date('d/m/Y H:i:s', strtotime($request->created));
+					else if ( $request->status == 'AP' && $request->published == '0000-00-00 00:00:00')
+						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span> <br />Aprovado (Mas não publicada)<br />Solicitado em ' . date('d/m/Y H:i:s', strtotime($request->created) );
+					else if ( $request->status == 'AP' && $request->published != '0000-00-00 00:00:00')
+						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span> <br />Publicado no passado: ' . date('d/m/Y H:i:s', strtotime($request->published) );
+					else if ( $request->status == 'PB' )
+						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span><span title="Publicado" class="dashicons dashicons-admin-home"></span> <br />Aprovado e Publicado.<br /> Publicado em ' . date('d/m/Y H:i:s', strtotime($request->published));
+					else if ( $request->status == 'RJ' )
+						echo '<span class="dashicons dashicons-no" title="Rejeitado"></span><br /> <span style="color: red">Rejeitado</span> <br /> Solicitiado em ' . date('d/m/Y H:i:s', strtotime($request->created));
+				}
+
+
+			break;
+		}
+	}
+
+	public function post_sortable_columns( $columns ) {
+		$columns['wpcpn_requests'] = 'Status da Solicitação de Destaque';
+		return $columns;
+	}
+
+	public function admin_footer() {
+		ob_start();
+		?>
+		<div style="display:none" id="wpcpn-modal-content">
+			<h3>Você está solicitando destaque para o post:</h3>
+			<h4 class="wpcpn-post-title">"<span></span>"</h4>
+			<p>Por Favor, descreva os motivos da sua solicitação.
+				Esta solicitação não irá colocar a notícias automaticamente na página inicial, ela
+				precisa ser aprovada por um administrador do portal.</p>
+			<p>As notícias podem sofrer alterações pela ASSECOM antes de ir para a página principal.</p>
+			<h3>Motivo:</h3>
+			<input type="hidden" name="wpcpn-post-id" value="" />
+			<input type="hidden" name="wpcpn-blog-id" value="" />
+
+			<textarea name="wpcpn-request-reason-text" class="wpcpn-request-reason-text" cols="30" rows="10"></textarea>
+		</div>
+		<?php
+		$content = ob_get_contents();
+		echo $content;
+	}
+
 
 	/**
 	 * Register and enqueue admin-specific style sheet.
@@ -104,16 +148,9 @@ class WPCPN_Admin {
 	 * @return    null    Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_styles() {
-
-		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
-			return;
+		if ( 'edit-post' == $screen->id ) {
+			wp_enqueue_style( 'wp-jquery-ui-dialog');
 		}
-
-		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), WPCPN::VERSION );
-		}
-
 	}
 
 	/**
@@ -129,92 +166,14 @@ class WPCPN_Admin {
 	 */
 	public function enqueue_admin_scripts() {
 
-		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
-			return;
-		}
 
-		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_register_script( $this->plugin_slug . '-fast-live-filters',
-								plugins_url( 'assets/js/jquery-fast-live-filter.js', __FILE__),
-								null,
-								WPCPN::VERSION
-				 			 );
-			wp_enqueue_script( $this->plugin_slug . '-admin-script',
-							   plugins_url( 'assets/js/admin.js', __FILE__ ),
-							   array( $this->plugin_slug . '-fast-live-filters','jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-autocomplete' , 'jquery' ),
-							   WPCPN::VERSION
-							);
-			wp_localize_script( $this->plugin_slug . '-admin-script', 'WPCPN_Variables',
-								array(
-							    	'nonce' => wp_create_nonce( WPCPN_Admin::NONCE ),
-							    )
-							  );
+		if (  'edit-post' == $screen->id ) {
+			wp_enqueue_script( 'wpcpn_requisition_modal' , plugins_url( 'assets/js/edit-posts.js' , __FILE__),  array('jquery-ui-dialog'));
 		}
 
 	}
 
-	/**
-	 * Register the administration menu for this plugin into the WordPress Dashboard menu.
-	 *
-	 * @since    1.0.0
-	 */
-	public function add_plugin_admin_menu() {
 
-		$this->plugin_screen_hook_suffix = add_menu_page(
-			__( 'Seletor de Posts', $this->plugin_slug ),
-			__( 'Seletor de Posts', $this->plugin_slug ),
-			'manage_network',
-			$this->plugin_slug,
-			array( $this, 'display_plugin_admin_page' ),
-			'dashicons-list-view',
-			78
-		);
-
-		$status = apply_filters('wpcpn_activate_feature_requests', true);
-
-		if ( $status ) {
-			$this->plugin_screen_sub_hook_suffix = add_submenu_page(
-				$this->plugin_slug,
-				'Solicitações de Destaque',
-				'Solicitações',
-				'manage_network',
-				$this->plugin_slug . '_requests',
-				array( $this, 'display_plugin_requests_admin_page')
-			);
-		}
-
-		add_submenu_page(
-			$this->plugin_slug,
-			'Publicações Antigas',
-			'Histórico',
-			'manage_network',
-			$this->plugin_slug . '_old_requests',
-			array( $this, 'display_plugin_old_requests_admin_page')
-		);
-
-
-
-
-
-	}
-
-	/**
-	 * Render the settings page for this plugin.
-	 *
-	 * @since    1.0.0
-	 */
-	public function display_plugin_admin_page() {
-		$this->model = new WPCPN_Admin_Model();
-		include_once( 'views/admin.php' );
-	}
-
-	public function display_plugin_requests_admin_page() {
-		include_once( 'views/admin-requests.php');
-	}
-	public function display_plugin_old_requests_admin_page() {
-		include_once( 'views/admin-old-requests.php');
-	}
 	/**
 	 * Add settings action link to the plugins page.
 	 *
