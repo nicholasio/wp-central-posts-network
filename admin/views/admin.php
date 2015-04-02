@@ -6,39 +6,37 @@
  * The User Interface to the end user.
  *
  * @package   WPCPN
- * @author    Nícholas André <nicholasandre@ufersa.edu.br>
- * @license   GPL-2.0+	
- * @link      http://
- * @copyright 2014 UFERSA
+ * @author    Nícholas André <nicholas@iotecnologia.com.br>
+ * @license   GPL-2.0+
  */
 ?>
 
 <div class="wrap">
 
 	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
-		
-	<h3><span>Configurações de Exibição da Página Inicial</span></h3>
+
+	<h3><span><?php _e('Define which posts will be displayed in each section.', 'wpcon'); ?></span></h3>
 	<div class="inside">
 		<h2 class="nav-tab-wrapper" style="padding:0 0 0 10px;">
-			<?php 
+			<?php
 				$sections = array();
 				$sections = apply_filters('wpcpn_posts_section', $sections);
 				$currentGroupTab = '';
 				if ( is_array($sections) ) :
-					if ( isset( $_GET['tab']) ) 
+					if ( isset( $_GET['tab']) )
 						$currentGroupTab = $_GET['tab'];
-					else 
+					else
 						$currentGroupTab = key($sections); // Primeiro 'key' do array
 
 					foreach( $sections as $groupslug => $groups ) : ?>
 					<a href="?page=wpcpn&tab=<?php echo $groupslug; ?>" class="nav-tab <?php if ( $currentGroupTab == $groupslug ) echo 'nav-tab-active' ?> "><?php echo $groups['name']?></a>
-			<?php 
-					endforeach; 
+			<?php
+					endforeach;
 				endif;
 			?>
-		</h2>	
+		</h2>
 
-		<?php 
+		<?php
 			if ( is_array($sections) ) {
 				$arrPost   		= $this->model->getAllPostsFromBlogs();
 				$currentSection = $sections[$currentGroupTab];
@@ -53,15 +51,15 @@
 							if ( isset($section['on_error']) )
 								$on_error = $section['on_error'];
 						}
-						$posts_selected = WPCPN_Admin_Model::getPostsLists($currentGroupTab, $section['slug']);
+						$posts_selected = WPCPN_Post_Selector_Model::getPostsLists($currentGroupTab, $section['slug']);
 						include('posts_selector_section.php');
 					}
 				echo '</div>';
 			}
 		?>
-		
-		
+
+
 	</div> <!-- .inside -->
-					
+
 </div>
 

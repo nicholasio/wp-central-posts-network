@@ -33,7 +33,7 @@ define('WPCPN_IS_MAIN_SITE', get_current_blog_id() == 1 );
 
 require_once( plugin_dir_path( __FILE__ ) . 'includes/trait-singleton.php');
 require_once( plugin_dir_path( __FILE__ ) . 'includes/WPCPN_Fragment_Cache.php');
-require_once( plugin_dir_path( __FILE__ ) . 'admin/models/class-wpcpn-admin-model.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'admin/models/class-wpcpn-post-selector-model.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'admin/models/class-wpcpn-requests.php');
 require_once( plugin_dir_path( __FILE__ ) . 'admin/class-post-selector.php');
 require_once( plugin_dir_path( __FILE__ ) . 'includes/network_queries.php' );

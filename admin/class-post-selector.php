@@ -24,8 +24,8 @@ class WPCPN_Post_Selector {
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
 
-		add_action( 'wp_ajax_wpcpn_get_posts_from_blog' , 'WPCPN_Admin_Model::getPostsFromBlog' );
-		add_action( 'wp_ajax_wpcpn_save_posts_list', 'WPCPN_Admin_Model::savePostsList');
+		add_action( 'wp_ajax_wpcpn_get_posts_from_blog' , 'WPCPN_Post_Selector_Model::getPostsFromBlog' );
+		add_action( 'wp_ajax_wpcpn_save_posts_list', 'WPCPN_Post_Selector_Model::savePostsList');
 	}
 
 	/**
@@ -36,8 +36,8 @@ class WPCPN_Post_Selector {
 	public function add_plugin_admin_menu() {
 
 		$this->screen_id = add_menu_page(
-			__( 'Posts Selector', $this->plugin_slug ),
-			__( 'Posts Selector', $this->plugin_slug ),
+			__( 'Network Posts Selector', $this->plugin_slug ),
+			__( 'Network Posts Selector', $this->plugin_slug ),
 			'manage_network',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' ),
@@ -50,8 +50,8 @@ class WPCPN_Post_Selector {
 		if ( $status ) {
 			 add_submenu_page(
 				$this->plugin_slug,
-				'Solicitações de Destaque',
-				'Solicitações',
+				__('Featured Requests', 'wpcpn'),
+				__('Requests', 'wpcpn'),
 				'manage_network',
 				$this->plugin_slug . '_requests',
 				array( $this, 'display_plugin_requests_admin_page')
@@ -60,8 +60,8 @@ class WPCPN_Post_Selector {
 
 		add_submenu_page(
 			$this->plugin_slug,
-			'Publicações Antigas',
-			'Histórico',
+			__('Older Publications', 'wpcpn'),
+			__('History', 'wpcpn'),
 			'manage_network',
 			$this->plugin_slug . '_old_requests',
 			array( $this, 'display_plugin_old_requests_admin_page')
@@ -105,7 +105,7 @@ class WPCPN_Post_Selector {
 	 * @since    1.0.0
 	 */
 	public function display_plugin_admin_page() {
-		$this->model = new WPCPN_Admin_Model();
+		$this->model = new WPCPN_Post_Selector_Model();
 		include_once( 'views/admin.php' );
 	}
 

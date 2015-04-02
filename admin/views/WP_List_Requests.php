@@ -16,15 +16,15 @@ Class WP_List_Requests extends WP_List_Table {
 
 	public function get_columns() {
 		$columns = array(
-			'ID' => 'ID',
-			'blog_id' => 'Site',
-			'post_id' => 'Post',
-			'message' => 'Mensagem',
-			'created'  => 'Data da solicitação',
-			'published' => 'Data da publicação',
+			'ID'        => __('ID', 'wpcpn'),
+			'blog_id'   => __('Site', 'wpcpn'),
+			'post_id'   => __('Post', 'wpcpn'),
+			'message'   => __('Message', 'wpcpn'),
+			'created'   => __('Request Date', 'wpcpn'),
+			'published' => __('Published Date', 'wpcpn'),
 
-			'status' => 'Status',
-			'actions' => 'Ações'
+			'status'    => __('Status', 'wpcpn'),
+			'actions'   => __('Actions', 'wpcpn')
 		);
 
 		if ( !$this->recents ) {
@@ -94,7 +94,7 @@ Class WP_List_Requests extends WP_List_Table {
 			case 'published':
 			case 'created':
 				if ( strtotime($value) == 0 ) return '';
-				return  date('d/m/Y à\s H:i:s', strtotime($value));
+				return  date_i18n(get_option('date_format') . ' à\s H:i:s', strtotime($value));
 			break;
 			case 'blog_id':
 				switch_to_blog($item->blog_id);
@@ -111,41 +111,41 @@ Class WP_List_Requests extends WP_List_Table {
 
 				restore_current_blog();
 
-				return "<strong>{$blogname}</strong> <br /> <a target='_blank' href='{$url}'> Ver Site</a> | <a target='_blank' href='{$admin_url}'>Ver Painel</a>";
+				return "<strong>{$blogname}</strong> <br /> <a target='_blank' href='{$url}'>" . __('View Site', 'wpcpn') . "</a> | <a target='_blank' href='{$admin_url}'>" . __('View Panel', 'wpcpn') . "</a>";
 
 			break;
 			case 'status':
 				switch( $value ) {
 					case 'PB':
-						return '<span style="color: green"><strong>Publicado</strong></span>';
+						return '<span style="color: green"><strong>'. __('Published', 'wpcpn') .'</strong></span>';
 					break;
 					case 'RJ':
-						return '<span style="color: red">Rejeitado</span>';
+						return '<span style="color: red">'. __('Rejected', 'wpcpn') .'</span>';
 					case 'AW':
-						return '<span style="color: orange">Aguardando</span>';
+						return '<span style="color: orange">'. __('Waiting Review', 'wpcpn') .'</span>';
 					break;
 					case 'AP':
-						return '<span style="color: green">Aprovado</span>';
+						return '<span style="color: green">'. __('Approved', 'wpcpn') .'</span>';
 					break;
 				}
 			break;
 			case 'post_id':
-				return "<strong>{$this->curr_post->post->post_title}</strong> <br /> <a target='_blank' href='{$this->curr_post->url}'>Editar Post</a> | <a target='_blank' href='{$this->curr_post->permalink}'>Ver Post</a> ";
+				return "<strong>{$this->curr_post->post->post_title}</strong> <br /> <a target='_blank' href='{$this->curr_post->url}'>". __('Edit Post', 'wpcpn') ."</a> | <a target='_blank' href='{$this->curr_post->permalink}'>".__('View Post', 'wpcpn')."</a> ";
 			break;
 			case 'actions':
 				$approve_url	= wp_nonce_url(admin_url("admin.php?page=wpcpn_requests&blog_id={$item->blog_id}&post_id={$item->post_id}&action=approve"), 'wpcpn_change_status' , 'wpcpn_requests_nonce');
 				$reject_url		= wp_nonce_url(admin_url("admin.php?page=wpcpn_requests&blog_id={$item->blog_id}&post_id={$item->post_id}&action=reject"), 'wpcpn_change_status', 'wpcpn_requests_nonce');
 				$awaiting_url	= wp_nonce_url(admin_url("admin.php?page=wpcpn_requests&blog_id={$item->blog_id}&post_id={$item->post_id}&action=awaiting"), 'wpcpn_change_status', 'wpcpn_requests_nonce');
-				$approve		= "<a href='{$approve_url}'>Aprovar</a>";
-				$reject			= "<a href='{$reject_url}'>Rejeitar</a>";
-				$awaiting		= "<a href='{$awaiting_url}'>Aguardando</a>";
+				$approve		= "<a href='{$approve_url}'>"  . __('Approve', 'wpcpn') . "</a>";
+				$reject			= "<a href='{$reject_url}'>"   . __('Reject', 'wpcpn') . "</a>";
+				$awaiting		= "<a href='{$awaiting_url}'>" . __('Waiting', 'wpcpn') . "</a>";
 				$sep			= "|";
 				$sep2			= "|";
 				if ( $item->status == 'PB' ) {
 					$approve	= '';
 					$reject		= '';
 					$awaiting   = '';
-					$sep		= 'Sem Ações';
+					$sep		= __('No Actions', 'wpcpn');
 					$sep2 		= '';
 				} else if ( $item->status == 'RJ' ) {
 					$reject	= '';

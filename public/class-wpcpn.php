@@ -365,7 +365,7 @@ class WPCPN {
 //API
 
 function wpcpn_get_grouped_posts_list( $group_name, $section_name ) {
-	return WPCPN_Admin_Model::getPostsLists( $group_name, $section_name );
+	return WPCPN_Post_Selector_Model::getPostsLists( $group_name, $section_name );
 }
 
 function wpcpn_get_posts_list( $group_name, $section_name ) {

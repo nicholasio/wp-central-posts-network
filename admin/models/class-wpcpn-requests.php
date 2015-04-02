@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @package WPCPN_Public
+ * @package WPCPN_Admin
  * @author  Nícholas André <nicholas@iotecnologia.com.br>
  */
 
@@ -134,7 +134,7 @@ class WPCPN_Requests {
 		return true;
 	}
 
-	public function get_request( $blog_id, $post_id ) {
+	public static function get_request( $blog_id, $post_id ) {
 
 		global $wpdb;
 		$row = $wpdb->get_row(

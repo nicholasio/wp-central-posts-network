@@ -1,33 +1,32 @@
 <div class="wrap">
 	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
-	<?php 
+	<?php
 		if ( isset($_GET['wpcpn_requests_nonce']) ) {
 			check_admin_referer('wpcpn_change_status', 'wpcpn_requests_nonce');
 			$blog_id = esc_sql($_GET['blog_id']);
 			$post_id = esc_sql($_GET['post_id']);
 
 			if ( $_GET['action'] == 'approve' ) {
-				WPCPN_Admin_Public_Model::change_status('AP', $blog_id, $post_id);
+				WPCPN_Requests::change_status('AP', $blog_id, $post_id);
 			} else if ( $_GET['action'] == 'reject' ) {
-				WPCPN_Admin_Public_Model::change_status('RJ', $blog_id, $post_id);
+				WPCPN_Requests::change_status('RJ', $blog_id, $post_id);
 			} else if ( $_GET['action'] == 'awaiting' ) {
-				WPCPN_Admin_Public_Model::change_status('AW', $blog_id, $post_id);
+				WPCPN_Requests::change_status('AW', $blog_id, $post_id);
 			}
 		}
 	?>
 	<div class="inside">
-		<p>Na tabela abaixo é possível visualizar todas as solicitações de destaque de posts. </p>
-		<p>Note que ao aprovar uma solicitação ela não vai automaticamente para a página principal, é necessário associar ela a alguma
-			seção no menu Seletor de Posts.</p>
-		<h3>Status possíveis</h3>
+		<p><?php _e('In the table below you can see all the requests for posts.', 'wpcpn'); ?>
+		<?php _e('Note that in approving a request it will not automatically go to the main page, you must associate it to one or more post section in the post selector menu', 'wpcpn'); ?></p>
+		<h3><?php _e('Status Legend', 'wpcpn'); ?></h3>
 		<ul>
-			<li>Aguardando - Aguardando análise</li>
-			<li>Aprovado - Aprovado mas não publicado</li>
-			<li>Publicado - Publicado</li>
-			<li>Rejeitado - Rejeitado para publicação</li>
+			<li><?php _e('Waiting Review - Waiting for the super admin review the request', 'wpcpn'); ?></li>
+			<li><?php _e('Approved - Approved, but not published', 'wpcpn'); ?></li>
+			<li><?php _e('Published - Published', 'wpcpn'); ?></li>
+			<li><?php _e('Rejected - Rejected by the super admin', 'wpcpn'); ?></li>
 		</ul>
-		<h2>Últimas solicitações</h2>
-		<?php 
+		<h2><?php _e('Last Requests', 'wpcpn') ?></h2>
+		<?php
 			require_once( plugin_dir_path( __FILE__ ) . 'WP_List_Requests.php' );
 
 			$requests_table = new WP_List_Requests();

@@ -4,10 +4,10 @@
  * Plugin Admin Menu Model Class
  *
  * @package WPCPN_Admin
- * @author  Nícholas André <nicholasandre@ufersa.edu.br>
+ * @author  Nícholas André <nicholas@iotecnologia.com.br>
  */
 
-class WPCPN_Admin_Model {
+class WPCPN_Post_Selector_Model {
 
 	const META_KEY = 'wpcpn_posts_list_';
 	/**
@@ -145,7 +145,7 @@ class WPCPN_Admin_Model {
 			die();
 		}
 
-		$meta_key = WPCPN_Admin_Model::META_KEY . $group . '_' . $section;
+		$meta_key = WPCPN_Post_Selector_Model::META_KEY . $group . '_' . $section;
 		$old_posts = get_option($meta_key);
 
 
@@ -180,9 +180,6 @@ class WPCPN_Admin_Model {
 		}
 		$arrPosts['count'] = $count;
 
-
-
-
 		update_option($meta_key, $arrPosts);
 
 		do_action("wpcpn_posts_list_{$group}_{$section}");
@@ -195,7 +192,7 @@ class WPCPN_Admin_Model {
 	 *	Retorna a lista de posts cadastrado para um dado group/seção
 	 */
 	public static function getPostsLists( $group, $sectionSlug ) {
-		$postLists =  get_option(WPCPN_Admin_Model::META_KEY . $group . '_' . $sectionSlug);
+		$postLists =  get_option(WPCPN_Post_Selector_Model::META_KEY . $group . '_' . $sectionSlug);
 
 		if ( ! $postLists )
 			return array('count' => 0);

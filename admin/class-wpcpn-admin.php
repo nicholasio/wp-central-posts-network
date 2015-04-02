@@ -18,12 +18,19 @@ class WPCPN_Admin {
 	/**
 	 * Holds a reference to the model class
 	 *
-	 * @since    1.0.0
+	 * @since    0.5
 	 *
 	 * @var      Model
 	 */
 	public $model = null;
 
+	/**
+	 * Holds a reference to the post selector class
+	 *
+	 * @since 0.5
+	 *
+	 * @var Object
+	 */
 	public $post_selector;
 
 
@@ -31,7 +38,7 @@ class WPCPN_Admin {
 	 * Initialize the plugin by loading admin scripts & styles and adding a
 	 * settings page and menu.
 	 *
-	 * @since     1.0.0
+	 * @since     0.1
 	 */
 	private function __construct() {
 		$plugin = WPCPN::get_instance();
@@ -62,23 +69,38 @@ class WPCPN_Admin {
 	}
 
 	/**
-	 * Filtra os links que são exibidos abaixo de cada post na listagem de posts
-	 * Função callback para o filtro post_row_actions
-	 * @see  WPCPN::__construct()
-	 * @param  Array $actions Contém todos os links
-	 * @return Array          Array contendo os links modificados
+	 * Filter the links that are displayed bellow each post on the post listings]
+	 * Callback function for the post_row_actions filter
+	 *
+	 * @see WPCPN_Admin::__construct()
+	 * @param  Array $actions Contains all the links
+	 * @return Array          Array containing the modified links
 	 */
 	public function post_row_actions( $actions ) {
-		$actions['wpcpn_feature'] = '<a href="#" class="wpcpn-open-modal" data-wpcpn-post-title="'.get_the_title().'" data-wpcpn-post-id="' . get_the_ID() . '" data-wpcpn-blog-id="' . get_current_blog_id() . '">Solicitar Destaque na Home</a>';
+		$actions['wpcpn_feature'] = '<a href="#" class="wpcpn-open-modal" data-wpcpn-post-title="'.get_the_title().'" data-wpcpn-post-id="' . get_the_ID() . '" data-wpcpn-blog-id="' . get_current_blog_id() . '">' . __("Request featured in home", 'wpcpn') . '</a>';
 		return $actions;
 	}
 
+	/**
+	 * Adds a new column to the post editor escreen
+	 *
+	 * @see WPCPN_Admin::__construct()
+	 * @param  Array $columns Contains all the columns
+	 * @return Array $columns Return the news and modified columns
+	 */
 	public function add_post_columns( $columns ) {
-	 	$column_meta = array( 'wpcpn_requests' => 'Status da Solicitação de Destaque' );
+	 	$column_meta = array( 'wpcpn_requests' => __('Featured Request Status', 'wpcpn')  );
 		$columns = array_slice( $columns, 0, 2, true ) + $column_meta + array_slice( $columns, 2, NULL, true );
 		return $columns;
 	}
 
+	/**
+	 * Define what are display for each column row
+	 *
+	 * @see WPCPN_Admin::__construct()
+	 * @param Array $columns Contains all the columns
+	 * @return Array $columns Return the text displayed for each column row
+	 */
 	public function post_custom_columns( $column ) {
 		global $post;
 
@@ -89,19 +111,21 @@ class WPCPN_Admin {
 				$request = WPCPN_Requests::get_request($blog_id, $post_id);
 
 				if ( $request == NULL )
-					echo 'Não Solicitado';
+					echo _('Unsolicited', 'wpcpn');
 				else {
 
 					if ( $request->status == 'AW' )
-						echo '<span class="dashicons dashicons-visibility" title="Aguardando Análise"></span> <br />Aguardando Análise. </br> Solicitado em ' . date('d/m/Y H:i:s', strtotime($request->created));
+						echo '<span class="dashicons dashicons-visibility" title="' . __('Waiting review', 'wpcpn') . '"></span> <br />' . __('Waiting review', 'wpcpn') . '. </br> ' . __('Requested in') . ' ' . date_i18n( get_option('date_format') , strtotime($request->created));
 					else if ( $request->status == 'AP' && $request->published == '0000-00-00 00:00:00')
-						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span> <br />Aprovado (Mas não publicada)<br />Solicitado em ' . date('d/m/Y H:i:s', strtotime($request->created) );
+						echo '<span class="dashicons dashicons-yes" title="'.__('Approved', 'wpcpn').'"></span> <br />' . __('Approved, but not published', 'wpcpn') . '. </br> ' . __('Requested in') . ' ' .  date_i18n( get_option('date_format') , strtotime($request->created) );
 					else if ( $request->status == 'AP' && $request->published != '0000-00-00 00:00:00')
-						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span> <br />Publicado no passado: ' . date('d/m/Y H:i:s', strtotime($request->published) );
+						echo '<span class="dashicons dashicons-yes" title="'.__('Approved', 'wpcpn').'"></span> <br />Publicado no passado: ' . date_i18n( get_option('date_format') , strtotime($request->published) );
 					else if ( $request->status == 'PB' )
-						echo '<span class="dashicons dashicons-yes" title="Aprovado"></span><span title="Publicado" class="dashicons dashicons-admin-home"></span> <br />Aprovado e Publicado.<br /> Publicado em ' . date('d/m/Y H:i:s', strtotime($request->published));
+						echo '<span class="dashicons dashicons-yes" title="'.__('Approved', 'wpcpn').'">
+							 </span><span title="'.__('Published', 'wpcpn').'" class="dashicons dashicons-admin-home"></span>
+							 <br />'.__('Approved and Published', 'wpcpn').'.<br /> ' . __('Published in', 'wpcpn') . ' ' . date_i18n( get_option('date_format') , strtotime($request->published));
 					else if ( $request->status == 'RJ' )
-						echo '<span class="dashicons dashicons-no" title="Rejeitado"></span><br /> <span style="color: red">Rejeitado</span> <br /> Solicitiado em ' . date('d/m/Y H:i:s', strtotime($request->created));
+						echo '<span class="dashicons dashicons-no" title="'.__('Rejected', 'wpcpn').'"></span><br /> <span style="color: red">'.__('Rejected', 'wpcpn').'</span> <br /> '. ' </br> ' . __('Requested in') . ' ' . date_i18n( get_option('date_format') , strtotime($request->created));
 				}
 
 
@@ -109,22 +133,32 @@ class WPCPN_Admin {
 		}
 	}
 
+	/**
+	 * Define what columns are sortable
+	 */
 	public function post_sortable_columns( $columns ) {
-		$columns['wpcpn_requests'] = 'Status da Solicitação de Destaque';
+		$columns['wpcpn_requests'] = __('Featured Request Status', 'wpcpn');
 		return $columns;
 	}
 
+	/**
+	 * HTML that are displayed in the footer
+	 */
 	public function admin_footer() {
+
+		$screen = get_current_screen();
+		if ( 'edit-post' != $screen->id )
+			return;
+
 		ob_start();
 		?>
 		<div style="display:none" id="wpcpn-modal-content">
-			<h3>Você está solicitando destaque para o post:</h3>
+			<h3><?php _e('You are requesting highlight for this post in the main site', 'wpcpn'); ?>:</h3>
 			<h4 class="wpcpn-post-title">"<span></span>"</h4>
-			<p>Por Favor, descreva os motivos da sua solicitação.
-				Esta solicitação não irá colocar a notícias automaticamente na página inicial, ela
-				precisa ser aprovada por um administrador do portal.</p>
-			<p>As notícias podem sofrer alterações pela ASSECOM antes de ir para a página principal.</p>
-			<h3>Motivo:</h3>
+			<p><?php _e('Please describe the reasons for your request. This request will not automatically put this post on the main site, it
+						 must be approved by a super administrator.', 'wpcpn'); ?></p>
+			<p><?php _e('Be aware that your post can be edited before posting in the main site.', 'wpcpn'); ?></p>
+			<h3><?php _e('Reasons', 'wpcpn'); ?>:</h3>
 			<input type="hidden" name="wpcpn-post-id" value="" />
 			<input type="hidden" name="wpcpn-blog-id" value="" />
 
@@ -139,36 +173,40 @@ class WPCPN_Admin {
 	/**
 	 * Register and enqueue admin-specific style sheet.
 	 *
-	 * @TODO:
 	 *
-	 * - Rename "Plugin_Name" to the name your plugin
-	 *
-	 * @since     1.0.0
-	 *
-	 * @return    null    Return early if no settings page is registered.
+	 * @since     0.5.0
 	 */
 	public function enqueue_admin_styles() {
+		$screen = get_current_screen();
+
 		if ( 'edit-post' == $screen->id ) {
 			wp_enqueue_style( 'wp-jquery-ui-dialog');
 		}
+
 	}
 
 	/**
 	 * Register and enqueue admin-specific JavaScript.
 	 *
-	 * @TODO:
 	 *
-	 * - Rename "Plugin_Name" to the name your plugin
-	 *
-	 * @since     1.0.0
-	 *
-	 * @return    null    Return early if no settings page is registered.
+	 * @since     0.5
 	 */
 	public function enqueue_admin_scripts() {
-
+		$screen = get_current_screen();
 
 		if (  'edit-post' == $screen->id ) {
 			wp_enqueue_script( 'wpcpn_requisition_modal' , plugins_url( 'assets/js/edit-posts.js' , __FILE__),  array('jquery-ui-dialog'));
+
+			$editPostsl10n = array(
+				'dialog_title'      => __('Informations about your request', 'wpcon'),
+				'btn_send'          => __('Send', 'wpcpn'),
+				'btn_close'         => __('Close', 'wpcpn'),
+				'request_duplicate' => __('Duplicated Request', 'wpcpn'),
+				'request_success'   => __('Successfully sent request', 'wpcpn'),
+				'request_error'     => __('It happened a problem with your request', 'wpcpn')
+ 			);
+
+			wp_localize_script( 'wpcpn_requisition_modal', 'EditPosts', $editPostsl10n );
 		}
 
 	}

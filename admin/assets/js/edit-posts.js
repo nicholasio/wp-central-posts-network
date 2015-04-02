@@ -26,9 +26,9 @@
 			        'autoOpen'      : false,
 			        'closeOnEscape' : true,
 			        'width'			: 400,
-			        'title' 		: 'Informações sobre a sua solicitação',
+			        'title' 		: EditPosts.dialog_title,
 			       	'buttons' : [
-			       					{'text' : 'Enviar', 'class' : 'button-primary',
+			       					{'text' : EditPosts.btn_send, 'class' : 'button-primary',
 				       					'click' : function() {
 				       						var post_id = $info.find('input[name=wpcpn-post-id]').val();
 			        						var blog_id = $info.find('input[name=wpcpn-blog-id]').val();
@@ -45,23 +45,23 @@
 												},
 												success: function( result ) {
 													if ( result == 1)
-														alert('Solcitação duplicada');
+														alert(EditPosts.request_duplicate);
 													else if ( result == 2)
-														alert("Solicitação enviada com sucesso");
+														alert(EditPosts.request_success);
 													else
-														alert("Erro na sua solicitação")
+														alert(EditPosts.request_error);
 
 				       								$(self).dialog('close');
 				       								window.location.reload()
 												},
 												error: function( result ) {
-													alert("Ocorreu algum problema na sua solicitação, tente novamente");
+													alert(EditPosts.request_error);
 												}
 											});
 
 				       					}
 			       					},
-			       					{'text' : 'Fechar', 'class' : '', 'click' : function() { $(this).dialog('close');} }
+			       					{'text' : EditPosts.btn_close, 'class' : '', 'click' : function() { $(this).dialog('close');} }
 			       				]
 			    });
 
