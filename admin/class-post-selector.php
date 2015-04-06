@@ -24,7 +24,7 @@ class WPCPN_Post_Selector {
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
 
-		add_action( 'wp_ajax_wpcpn_get_posts_from_blog' , 'WPCPN_Post_Selector_Model::getPostsFromBlog' );
+		add_action( 'wp_ajax_wpcpn_get_html_posts_list', array($this, 'get_html_posts_list') );
 		add_action( 'wp_ajax_wpcpn_save_posts_list', 'WPCPN_Post_Selector_Model::savePostsList');
 	}
 
@@ -86,17 +86,32 @@ class WPCPN_Post_Selector {
 								null,
 								WPCPN::VERSION
 				 			 );
-			wp_enqueue_script( $this->plugin_slug . '-admin-script',
-							   plugins_url( 'assets/js/admin.js', __FILE__ ),
+			wp_enqueue_script( $this->plugin_slug . '-post-selector-script',
+							   plugins_url( 'assets/js/post-selector.js', __FILE__ ),
 							   array( $this->plugin_slug . '-fast-live-filters','jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-autocomplete' , 'jquery' ),
 							   WPCPN::VERSION
 							);
-			wp_localize_script( $this->plugin_slug . '-admin-script', 'WPCPN_Variables',
+			wp_localize_script( $this->plugin_slug . '-post-selector-script', 'WPCPN_Variables',
 								array(
 							    	'nonce' => wp_create_nonce( WPCPN_Admin::NONCE ),
 							    )
 							  );
 		}
+	}
+
+	public function get_html_posts_list() {
+		$blog_id        = (int) $_GET['blog_id'];
+		$section_slug   = esc_sql($_GET['section']);
+		$group_slug     = esc_sql($_GET['group']);
+
+		$blog_posts     = WPCPN_Post_Selector_Model::getPostsFromBlog($blog_id);
+		$posts_selected = WPCPN_Post_Selector_Model::getPostsList($group_slug, $section_slug);
+		$sections       = apply_filters('wpcpn_posts_section', array());
+		$section        = $sections[$group]['sections'][$section_slug];
+
+		include( 'views/post-selector/site-post-list.php' );
+
+		die();
 	}
 
 	/**
@@ -106,7 +121,7 @@ class WPCPN_Post_Selector {
 	 */
 	public function display_plugin_admin_page() {
 		$this->model = new WPCPN_Post_Selector_Model();
-		include_once( 'views/post-selector.php' );
+		include_once( 'views/post-selector/admin.php' );
 	}
 
 	public function display_plugin_requests_admin_page() {

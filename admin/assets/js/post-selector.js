@@ -7,16 +7,17 @@
 			SELECTED : 2
 		};
 		var PostsChoose = {
-			$posts_selected	: '',
-			$posts_to_choose	: '',
-			$search			: '',
-			$siteChooser		: '',
-			$btnSavePostList	: '',
-			$section		: $(".wpcpm-section"),
-			$currentSection		: '',
-			$ajaxLoader		: '',
-			currentNamespace	: '',
-			currentGroup		: '',
+			namespaceSelector : '',
+			$posts_selected   : '',
+			$posts_to_choose  : '',
+			$search           : '',
+			$siteChooser      : '',
+			$btnSavePostList  : '',
+			$section          : $(".wpcpm-section"),
+			$currentSection   : '',
+			$ajaxLoader       : '',
+			currentNamespace  : '',
+			currentGroup      : '',
 
 			init : function() {
 				//Configura a seção atual: a seção atual é a seção onde o mouse está
@@ -27,7 +28,7 @@
 			 *	Configura o plugin fastLiveFilter
 			 */
 			liveFilter  : function() {
-				this.$search.fastLiveFilter(this.$posts_to_choose);
+				this.$search.fastLiveFilter(this.namespaceSelector + ' .wpcpn-posts-to-choose');
 			},
 
 			/**
@@ -36,17 +37,17 @@
 			setNameSpace : function(evt) {
 				var $section          = $(evt.currentTarget); //A seção atual é a seção onde o mouse está
 				this.currentNamespace = $section.attr('data-namespace');
-				var namespaceSelector = '.wpcpm-section.wpcpn-namespace-' + this.currentNamespace;
+				this.namespaceSelector = '.wpcpm-section.wpcpn-namespace-' + this.currentNamespace;
 
-				this.$currentSection  = $(namespaceSelector);
+				this.$currentSection  = $( this.namespaceSelector );
 				this.currentGroup     = $('.wpcpn-group').attr('id');
 
-				this.$siteChooser     = $( namespaceSelector + ' .wpcpn-site-chooser');
-				this.$posts_to_choose = $( namespaceSelector + ' .wpcpn-posts-to-choose');
-				this.$posts_selected  = $( namespaceSelector + ' .wpcpn-posts-selected');
-				this.$btnSavePostList = $( namespaceSelector + ' .wpcpn-save-post-list');
-				this.$search          = $( namespaceSelector + ' .wpcpn-search');
-				this.$ajaxLoader      = $( namespaceSelector + ' > .wpcpn-ajax-loader');
+				this.$siteChooser     = $( this.namespaceSelector + ' .wpcpn-site-chooser');
+				this.$posts_to_choose = $( this.namespaceSelector + ' .wpcpn-posts-to-choose');
+				this.$posts_selected  = $( this.namespaceSelector + ' .wpcpn-posts-selected');
+				this.$btnSavePostList = $( this.namespaceSelector + ' .wpcpn-save-post-list');
+				this.$search          = $( this.namespaceSelector + ' .wpcpn-search');
+				this.$ajaxLoader      = $( this.namespaceSelector + ' > .wpcpn-ajax-loader');
 
 				this.initSortableLists();
 
@@ -109,37 +110,30 @@
 			 * Carrega os posts do site selecionado na área de seleção
 			 */
 			selectSite : function( blog_id ) {
-				var current_blog_id = this.$posts_to_choose.attr('data-current-blog-id')
-				var namespace = this.$currentSection.attr('data-namespace');
+				var current_blog_id   = this.$posts_to_choose.attr('data-current-blog-id')
+				var namespace         = this.$currentSection.attr('data-namespace');
 
-				var curSelector    = ".wpcpn-all-posts." + namespace +" .wpcpn-posts-list[data-blog_id=" + current_blog_id + "]";
-				var blogIDSelector = ".wpcpn-all-posts." + namespace +" .wpcpn-posts-list[data-blog_id=" + blog_id + "]";
+				var that              = this;
+				var _$posts_to_choose = this.$posts_to_choose;
 
-				//Se já tem algum site selecionado, precisamos salvar o estado da seleção.
-				if ( typeof current_blog_id != "undefined" ) {
-					$(curSelector).html(this.$posts_to_choose.html());
-				}
+				var $ajaxLoader      =  this.$posts_to_choose.siblings('.wpcpn-ajax-loader');
+				var $btnSavePostList = this.$btnSavePostList;
 
-				// Setando lista de posts
-				var postsList = $(blogIDSelector).html();
-				this.$posts_to_choose.html(postsList);
+				this.loading( true, $ajaxLoader, $btnSavePostList );
 
-
-
-				/*var that = this;
-
-				$.getJSON(ajaxurl, {
-					'action'  : 'wpcpn_get_posts_from_blog',
-					'blog_id' : blog_id
+				$.get(ajaxurl, {
+					'action'  : 'wpcpn_get_html_posts_list',
+					'blog_id' : blog_id,
+					'section' : namespace,
+					'group'	  : that.currentGroup
 				}, function( result ) {
-					that.populateBlogPostsList( blog_id, result );
-					//that.liveFilter();
-				});*/
+					_$posts_to_choose .html( result );
+					that.liveFilter();
+					that.loading( false, $ajaxLoader, $btnSavePostList );
+				});
 
 				//Atualizando id do site selecionado
 				this.$posts_to_choose.attr('data-current-blog-id',blog_id);
-
-				this.liveFilter();
 			},
 
 			/**
@@ -155,7 +149,7 @@
 					//Verificando se o limite máximo de posts não foi atingido para essa seção
 					var nPostsSelected = this.$currentSection.attr('data-nposts');
 					var maxPosts       = parseInt(this.$currentSection.attr('data-max-posts') );
-					var canAdd = false;
+					var canAdd         = false;
 
 					if ( typeof nPostsSelected == "undefined" ) {
 						this.$currentSection.attr('data-nposts', 1);
@@ -206,13 +200,16 @@
 			},
 			addItem : function($o_li) {
 				var $li = $o_li.clone();
+
 				$li.find('a').removeClass('dashicons-plus-alt').addClass('dashicons-no');
 				this.$posts_selected.append($li);
+
 				$o_li.find('a').removeClass('dashicons-plus-alt').addClass('dashicons-yes');
-				//$o_li.css({'border' : '1px solid red'});
-				//$o_li.addClass('ui-state-highlight');
 				$o_li.attr('data-state', elState.SELECTED);
+
+				this.savePostList();
 			},
+
 			/**
 			 * Remove um item da lista de posts selecionados
 			 */
@@ -234,16 +231,33 @@
 					var $o_li = $(selector);
 
 					$o_li.find('a').removeClass('dashicons-yes').addClass('dashicons-plus-alt');
-					//$o_li.css({'border' : '1px solid #d3d3d3'});
-					//$o_li.removeClass('ui-state-highlight');
 					$o_li.attr('data-state', elState.NOT_SELECTED );
+
+					that.savePostList();
 				});
 
 				//Atualizando quantidade de posts selecionados
 				var nPosts = parseInt( this.$currentSection.attr('data-nposts') );
 				this.$currentSection.attr('data-nposts', nPosts - 1);
 
+
+
 				return false;
+			},
+
+			loading : function(isLoading, $ajaxLoader, $btnSavePostList) {
+
+				$ajaxLoader      = $ajaxLoader !== undefined ? $ajaxLoader : this.$ajaxLoader;
+				$btnSavePostList = $btnSavePostList !== undefined ? $btnSavePostList : this.$btnSavePostList;
+				if ( isLoading ) {
+					$ajaxLoader.show();
+					$btnSavePostList.attr('disabled', 'disabled');
+				} else {
+					$ajaxLoader.hide();
+					$btnSavePostList.removeAttr('disabled');
+				}
+
+
 			},
 
 			/**
@@ -259,7 +273,7 @@
 				 * @see setNamespace and init
 				 */
 				var $_ajaxLoader = this.$ajaxLoader;
-				$_ajaxLoader.show();
+				this.loading( true, $_ajaxLoader );
 
 				var that = this;
 				$.ajax({
@@ -273,11 +287,13 @@
 						'nonce'	  : WPCPN_Variables.nonce
 					},
 					success: function( result ) {
-						$_ajaxLoader.hide();
+						that.loading(false, $_ajaxLoader );
 					}
 				});
 
 			},
+
+
 
 			/**
 			 * Recebe uma lista de posts em formato JSON e popula a lista de post
