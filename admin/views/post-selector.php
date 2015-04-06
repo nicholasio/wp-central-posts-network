@@ -52,7 +52,7 @@
 								$on_error = $section['on_error'];
 						}
 						$posts_selected = WPCPN_Post_Selector_Model::getPostsLists($currentGroupTab, $section['slug']);
-						include('posts_selector_section.php');
+						include('post-selector-section.php');
 					}
 				echo '</div>';
 			}

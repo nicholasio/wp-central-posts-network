@@ -106,7 +106,7 @@ class WPCPN_Post_Selector {
 	 */
 	public function display_plugin_admin_page() {
 		$this->model = new WPCPN_Post_Selector_Model();
-		include_once( 'views/admin.php' );
+		include_once( 'views/post-selector.php' );
 	}
 
 	public function display_plugin_requests_admin_page() {
