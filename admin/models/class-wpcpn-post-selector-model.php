@@ -40,6 +40,7 @@ class WPCPN_Post_Selector_Model {
 
 	/**
 	 * Popula o array $arrPosts
+	 * It's not used anymore
 	 *
 	 * $arrPosts = array( BLOG_ID_1 =>
 	 *						array( POST_TYPE_1 => array(....),
@@ -62,7 +63,7 @@ class WPCPN_Post_Selector_Model {
 			$arrPosts[$blog_id]  = array();
 
 			//Não é uma requisição ajax e não restaure o blog corrente
-			$arrPosts[$blog_id]  = self::_getPostsFromBlog($blog_id, false, false);
+			$arrPosts[$blog_id]  = self::getPostsFromBlog($blog_id, false, false);
 		}
 
 		//Restaura para o site principal
@@ -83,9 +84,9 @@ class WPCPN_Post_Selector_Model {
 	 *				);
 	 * @since     1.0.0
 	 */
-	public static function _getPostsFromBlog($blog_id = null, $ajaxcall = false, $restore_current_blog = true) {
+	public static function getPostsFromBlog($blog_id = null, $ajaxcall = false, $restore_current_blog = true) {
 		$arrPosts = array();
-		if ( $ajaxcall && is_null($blogid) )
+		if ( $ajaxcall && is_null($blog_id) )
 			$blog_id   = intval($_GET['blog_id']);
 
 		switch_to_blog( $blog_id );
@@ -101,7 +102,7 @@ class WPCPN_Post_Selector_Model {
 				array(
 					'post_type' 		=> $post_type,
 					'order_by'  		=> 'post_date',
-					'posts_per_page' 	=> 50
+					'posts_per_page' 	=> -1
 				)
 			);
 
@@ -109,9 +110,6 @@ class WPCPN_Post_Selector_Model {
 			$arrPosts[$post_type] = $posts;
 
 		}
-
-		/*if ($restore_current_blog)
-			restore_current_blog();*/
 
 		restore_current_blog();
 		if ($ajaxcall) {
@@ -121,10 +119,6 @@ class WPCPN_Post_Selector_Model {
 
 		return $arrPosts;
 
-	}
-
-	public static function getPostsFromBlog($blog_id = null) {
-		self::_getPostsFromBlog($blog_id, true, true);
 	}
 
 	/**
@@ -225,11 +219,16 @@ class WPCPN_Post_Selector_Model {
 
 
 function wpcpn_array_search_for_array($array, $search_array) {
+	if ( ! is_array($array) ) return false;
+
 	$found = true;
 	foreach( $array as $ar ) {
+		$found = true;
 		foreach( $search_array as $key => $value )  {
-			if ( !isset($ar[$key]) || $ar[$key] != $value )
-				$found = false;
+			if ( isset($ar[$key]) && $ar[$key] == $value )
+				$found &= true;
+			else
+				$found &= false;
 		}
 		if ( $found ) return true;
 	}

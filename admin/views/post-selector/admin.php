@@ -19,8 +19,7 @@
 	<div class="inside">
 		<h2 class="nav-tab-wrapper" style="padding:0 0 0 10px;">
 			<?php
-				$sections = array();
-				$sections = apply_filters('wpcpn_posts_section', $sections);
+				$sections = apply_filters('wpcpn_posts_section', array());
 				$currentGroupTab = '';
 				if ( is_array($sections) ) :
 					if ( isset( $_GET['tab']) )
@@ -38,11 +37,11 @@
 
 		<?php
 			if ( is_array($sections) ) {
-				$arrPost   		= $this->model->getAllPostsFromBlogs();
-				$currentSection = $sections[$currentGroupTab];
+				$currentGroup = $sections[$currentGroupTab];
+				$sites				= WPCPN::get_blog_ids();
 
 				echo '<div id="' . $currentGroupTab . '" class="wpcpn-group">';
-					foreach($currentSection['sections'] as $section) {
+					foreach($currentGroup['sections'] as $section_slug => $section) {
 						$perform_on_select = false;
 						$ajaxName = 'wp_ajax_wpcpn_' . $section['slug'] . '_on_select';
 						$on_error = '';
