@@ -39,17 +39,21 @@
 			<td scope="row">
 				<p><?php _e('Posts that will be displayed in this section', 'wpcpn'); ?></p>
 				<ul class="connectedSortable sortable wpcpn-posts-selected">
+
+
 					<?php if ( is_array($posts_selected['posts']) ) : ?>
-						<?php foreach($posts_selected['posts'] as $blog_id => $blogPosts) : ?>
-							<?php foreach( $blogPosts as $postID ) :  ?>
-								<li data-blog-id="<?php echo $blog_id; ?>" data-uid="<?php echo $blog_id; ?>-<?php echo $postID; ?>" class="ui-state-default">
+						<?php foreach($posts_selected['posts'] as $post) : ?>
+								<?php
+									$post_id = $post['post_id'];
+									$blog_id = $post['blog_id'];
+								?>
+								<li data-blog-id="<?php echo $blog_id; ?>" data-uid="<?php echo $blog_id; ?>-<?php echo $post_id; ?>" class="ui-state-default">
 									<?php
-										$_post = get_blog_post($blog_id, $postID);
+										$_post = get_blog_post($blog_id, $post_id);
 										echo get_blog_option($blog_id, 'blogname') . ': ' . $_post->post_title;
 									?>
 									<a class="dashicons dashicons-no"href="#"></a>
 								</li>
-							<?php endforeach; ?>
 						<?php endforeach; ?>
 					<?php endif; ?>
 				</ul>
@@ -83,7 +87,12 @@
 										$uid =  $blog_id . '-' . $post->ID;
 
 										$state = 1;
-										if ( isset($posts_selected['posts'][$blog_id]) && in_array($post->ID, $posts_selected['posts'][$blog_id]) ){
+
+										if ( wpcpn_array_search_for_array( $posts_selected['posts'],
+																		  array( 'blog_id' => $blog_id,
+																		  	     'post_id' => $post->ID
+																		  ) )
+											){
 											$state = 2;
 										}
 

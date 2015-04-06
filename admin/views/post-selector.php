@@ -51,7 +51,7 @@
 							if ( isset($section['on_error']) )
 								$on_error = $section['on_error'];
 						}
-						$posts_selected = WPCPN_Post_Selector_Model::getPostsLists($currentGroupTab, $section['slug']);
+						$posts_selected = WPCPN_Post_Selector_Model::getPostsList($currentGroupTab, $section['slug']);
 						include('post-selector-section.php');
 					}
 				echo '</div>';

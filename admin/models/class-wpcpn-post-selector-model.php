@@ -166,11 +166,11 @@ class WPCPN_Post_Selector_Model {
 		if ( is_array($posts) ) {
 			foreach($posts as $blogPost) {
 				$pieces = explode('-', $blogPost);
-				$arrPosts['posts'][$pieces[0]][] = (int) $pieces[1];
+				$arrPosts['posts'][] = array('blog_id' => (int) $pieces[0],'post_id' => (int) $pieces[1]);
 
 				//Se tiver alguma solicitação pendente deste post, atualize o status para publicado
 				if ( ! WPCPN_Requests::get_request($pieces[0], $pieces[1]) ) {
-					WPCPN_Requests::insert_request($pieces[0], $pieces[1], 'Publicado na página principal pela ASSECOM sem solicitação');
+					WPCPN_Requests::insert_request($pieces[0], $pieces[1], __('Published on the main site by the super admin.', 'wpcpn'));
 				}
 
 				WPCPN_Requests::publish($pieces[0], $pieces[1]);
@@ -191,7 +191,7 @@ class WPCPN_Post_Selector_Model {
 	/*
 	 *	Retorna a lista de posts cadastrado para um dado group/seção
 	 */
-	public static function getPostsLists( $group, $sectionSlug ) {
+	public static function getPostsList( $group, $sectionSlug ) {
 		$postLists =  get_option(WPCPN_Post_Selector_Model::META_KEY . $group . '_' . $sectionSlug);
 
 		if ( ! $postLists )
@@ -221,4 +221,18 @@ class WPCPN_Post_Selector_Model {
 
 		return $pass;
 	}
+}
+
+
+function wpcpn_array_search_for_array($array, $search_array) {
+	$found = true;
+	foreach( $array as $ar ) {
+		foreach( $search_array as $key => $value )  {
+			if ( !isset($ar[$key]) || $ar[$key] != $value )
+				$found = false;
+		}
+		if ( $found ) return true;
+	}
+
+	return false;
 }
