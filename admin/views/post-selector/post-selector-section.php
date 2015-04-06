@@ -91,8 +91,7 @@
 										if ( wpcpn_array_search_for_array( $posts_selected['posts'],
 																		  array( 'blog_id' => $blog_id,
 																		  	     'post_id' => $post->ID
-																		  ) )
-											){
+																		  ) ) ){
 											$state = 2;
 										}
 
