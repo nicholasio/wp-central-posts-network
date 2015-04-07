@@ -1,9 +1,5 @@
 <?php
 /**
- * Represents the view for the administration dashboard.
- *
- * This includes the header, options, and other information that should provide
- * The User Interface to the end user.
  *
  * @package   WPCPN
  * @author    Nícholas André <nicholas@iotecnologia.com.br>
@@ -38,7 +34,7 @@
 		<?php
 			if ( is_array($sections) ) {
 				$currentGroup = $sections[$currentGroupTab];
-				$sites				= WPCPN::get_blog_ids();
+				$sites        = WPCPN::get_blog_ids();
 
 				echo '<div id="' . $currentGroupTab . '" class="wpcpn-group">';
 					foreach($currentGroup['sections'] as $section_slug => $section) {
@@ -50,7 +46,7 @@
 							if ( isset($section['on_error']) )
 								$on_error = $section['on_error'];
 						}
-						$posts_selected = WPCPN_Post_Selector_Model::getPostsList($currentGroupTab, $section['slug']);
+						$posts_selected = WPCPN_Post_Selector_Model::getPostsList($currentGroupTab, $section_slug);
 						include('post-selector-section.php');
 					}
 				echo '</div>';

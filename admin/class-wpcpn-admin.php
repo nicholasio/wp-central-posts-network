@@ -54,7 +54,8 @@ class WPCPN_Admin {
 		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
 
 
-		$status = apply_filters('wpcpn_activate_feature_requests', true );
+		$status = apply_filters('wpcpn_activate_featured_requests', true );
+
 		if ( get_current_blog_id() != 1 && $status ) {
 				add_filter( 'post_row_actions', array( $this, 'post_row_actions') );
 				add_filter( 'manage_edit-post_columns', array($this, 'add_post_columns') );

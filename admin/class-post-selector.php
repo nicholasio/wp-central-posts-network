@@ -45,7 +45,7 @@ class WPCPN_Post_Selector {
 			78
 		);
 
-		$status = apply_filters('wpcpn_activate_feature_requests', true);
+		$status = apply_filters('wpcpn_activate_featured_requests', true);
 
 		if ( $status ) {
 			 add_submenu_page(
