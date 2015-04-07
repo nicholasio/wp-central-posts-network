@@ -58,7 +58,7 @@
 					this.unbind();
 
 				this.bind();
-				this.liveFilter();
+				//this.liveFilter();
 
 			},
 
