@@ -176,10 +176,28 @@ class WPCPN_Post_Selector_Model {
 
 		update_option($meta_key, $arrPosts);
 
+		//Clear Cache
+		self::clearCache($group, $section);
+
 		do_action("wpcpn_posts_list_{$group}_{$section}");
 		do_action("wpcpn_save_post_list", $group, $section);
 
 		die();
+	}
+
+	/**
+	 * Clear the cache for a given group and section of posts
+	 */
+	public static function clearCache($group, $section) {
+		//cache is active?
+		if ( wpcpn_is_cache_active() ) return false;
+
+		//the $group and $section muste be cached?
+		if ( wpcpn_should_cache($group, $section) ) {
+			wpcpn_cache_delete($group, $section);
+		} else {
+			return false;
+		}
 	}
 
 	/*
@@ -217,21 +235,3 @@ class WPCPN_Post_Selector_Model {
 	}
 }
 
-
-function wpcpn_array_search_for_array($array, $search_array) {
-	if ( ! is_array($array) ) return false;
-
-	$found = true;
-	foreach( $array as $ar ) {
-		$found = true;
-		foreach( $search_array as $key => $value )  {
-			if ( isset($ar[$key]) && $ar[$key] == $value )
-				$found &= true;
-			else
-				$found &= false;
-		}
-		if ( $found ) return true;
-	}
-
-	return false;
-}
