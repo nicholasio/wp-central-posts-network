@@ -31,19 +31,71 @@ function wpcpn_get_path_for_site( $site ) {
     return $site_path_url;
 }
 
+//Cache functions
+
+function wpcpn_is_cache_active() {
+	return WPCPN::$cache_config !== false && is_array(WPCPN::$cache_config);
+}
+
+function wpcpn_should_cache($group, $section) {
+	return isset(WPCPN::$cache_config['cache'][$group]) && in_array($section, WPCPN::$cache_config['cache'][$group]) ;
+}
+
+function wpcpn_cache_delete($group, $section) {
+	if ( WPCPN::$cache_config['type'] == 'fragment-caching') {
+		$cache_keys = get_site_option('wpcpn_cache_keys');
+
+		if ( $cache_keys && isset($cache_keys[$group][$section]) ) {
+			foreach($cache_keys[$group][$section] as $cache_key) {
+				delete_transient('wpcpn-fragments_' . $cache_key); //@TODO improve this
+			}
+		}
+	}
+}
+
+function wpcpn_cache_get_instance($group, $section, $template = '', $params = '' ) {
+	$hash_key = md5($group . '-' .  $section . '/' . json_encode($template) . json_encode($params));
+	return new WPCPN_Fragment_Cache($hash_key, WPCPN::$cache_config['expiration'], false );
+}
+
+/**
+ * Adds a cache key to options table because we need to know which cache keys are associated
+ * with each $group-$section because we need to flush it when the user updates the posts list.
+ */
+function wpcpn_cache_add_key($group, $section, $key) {
+	$cache_keys = get_site_option('wpcpn_cache_keys');
+	if ( ! $cache_keys ) $cache_keys = array();
+
+	if ( ! isset($cache_keys[$group][$section]) ) {
+		$cache_keys[$group][$section] = array($key);
+	} else if (  ! in_array($key, $cache_keys[$group][$section]) ) {
+		$cache_keys[$group][$section][] = $key;
+		update_site_option('wpcpn_cache_keys', $cache_keys);
+	}
+
+}
+
 //API
 
 function wpcpn_get_posts_list( $group_name, $section_name ) {
 	return WPCPN_Post_Selector_Model::getPostsList( $group_name, $section_name );
 }
 
-/*
- * @TODO Object Cache
- */
 function wpcpn_show_posts_section( $group_name, $section_name, Array $template, $params = array() )  {
-	$section	= wpcpn_get_posts_section( $group_name, $section_name, $params );
-	if ( $section ) {
-	    wpcpn_show_posts($section, $template);
+	$section_posts	= wpcpn_get_posts_section( $group_name, $section_name, $params );
+	if ( $section_posts ) {
+		if ( wpcpn_is_cache_active() && wpcpn_should_cache($group_name, $section_name) ) {
+			$cache = wpcpn_cache_get_instance($group_name, $section_name, $template, $params);
+			if ( ! $cache->output() ) {
+				echo '<!-- Started WPCPN Fragment Cache block ' . date('Y-m-d H:i:s'). ' -->' . PHP_EOL;
+				wpcpn_show_posts($section_posts, $template);
+				echo PHP_EOL . '<!-- End WPCPN Fragment Cache block -->';
+				wpcpn_cache_add_key($group_name, $section_name,$cache->key);
+				$cache->store();
+			}
+		} else {
+			wpcpn_show_posts($section_posts, $template);
+		}
 	} else {
 		echo '<p>Seção não definida.</p>';
 	}

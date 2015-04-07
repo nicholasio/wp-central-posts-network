@@ -42,6 +42,11 @@ class WPCPN {
 	 */
 	protected $plugin_slug = 'wpcpn';
 
+	/**
+	 * Holds the cache config array
+	 */
+	public static $cache_config;
+
 
 	/**
 	 * Initialize the plugin by setting localization and loading public scripts
@@ -59,10 +64,7 @@ class WPCPN {
 		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
-		// Load public-facing style sheet and JavaScript.
-		//add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-		//add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
+		self::$cache_config = apply_filters( 'wpcpn_cache_config', false );
 	}
 
 	/**
@@ -340,25 +342,6 @@ class WPCPN {
 	public function cleanQuery() {
 
 	}
-
-	/**
-	 * Register and enqueue public-facing style sheet.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_styles() {
-		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
-	}
-
-	/**
-	 * Register and enqueues public-facing JavaScript files.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
-	}
-
 }
 
 
