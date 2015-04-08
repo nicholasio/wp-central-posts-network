@@ -15,7 +15,8 @@
 	<div class="inside">
 		<h2 class="nav-tab-wrapper" style="padding:0 0 0 10px;">
 			<?php
-				$sections = apply_filters('wpcpn_posts_section', array());
+				$sections = apply_filters('wpcpn_posts_section', null);
+
 				$currentGroupTab = '';
 				if ( is_array($sections) ) :
 					if ( isset( $_GET['tab']) )
@@ -34,6 +35,7 @@
 		<?php
 			if ( is_array($sections) ) {
 				$currentGroup = $sections[$currentGroupTab];
+
 				$sites        = WPCPN::get_blog_ids();
 
 				echo '<div id="' . $currentGroupTab . '" class="wpcpn-group">';

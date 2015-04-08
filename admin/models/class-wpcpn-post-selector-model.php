@@ -150,10 +150,6 @@ class WPCPN_Post_Selector_Model {
 			}
 		}
 
-		/**
-		 * Convertendo o array('blogid_postid', 'blogid1_postsid1')
-		 * para array('blogid' => array('postsid'), 'blogid1' => 'postsid1')
-		 **/
 		$arrPosts = array();
 
 		$count = 0;
@@ -190,13 +186,13 @@ class WPCPN_Post_Selector_Model {
 	 */
 	public static function clearCache($group, $section) {
 		//cache is active?
-		if ( wpcpn_is_cache_active() ) return false;
+		if ( ! wpcpn_is_cache_active() ) echo 1;
 
 		//the $group and $section muste be cached?
-		if ( wpcpn_should_cache($group, $section) ) {
+		if ( wpcpn_should_fragment_cache($group, $section) || WPCPN::$cache_config['type'] != 'fragment-caching') {
 			wpcpn_cache_delete($group, $section);
 		} else {
-			return false;
+			echo 1;
 		}
 	}
 

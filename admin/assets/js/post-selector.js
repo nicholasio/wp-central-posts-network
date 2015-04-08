@@ -276,7 +276,8 @@
 				 * @see setNamespace and init
 				 */
 				var $_ajaxLoader = this.$ajaxLoader;
-				this.loading( true, $_ajaxLoader );
+				var $_btnSavePostList = this.$btnSavePostList;
+				this.loading( true, $_ajaxLoader, $_btnSavePostList );
 
 				var that = this;
 				$.ajax({
@@ -290,7 +291,7 @@
 						'nonce'	  : WPCPN_Variables.nonce
 					},
 					success: function( result ) {
-						that.loading(false, $_ajaxLoader );
+						that.loading(false, $_ajaxLoader, $_btnSavePostList );
 					}
 				});
 
