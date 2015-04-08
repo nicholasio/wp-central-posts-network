@@ -37,19 +37,29 @@ function wpcpn_is_cache_active() {
 	return WPCPN::$cache_config !== false && is_array(WPCPN::$cache_config);
 }
 
-function wpcpn_should_cache($group, $section) {
-	return isset(WPCPN::$cache_config['cache'][$group]) && in_array($section, WPCPN::$cache_config['cache'][$group]) ;
+function wpcpn_should_fragment_cache($group, $section) {
+	return isset(WPCPN::$cache_config['cache'][$group]) &&
+	       in_array($section, WPCPN::$cache_config['cache'][$group]);
 }
 
 function wpcpn_cache_delete($group, $section) {
-	if ( WPCPN::$cache_config['type'] == 'fragment-caching') {
-		$cache_keys = get_site_option('wpcpn_cache_keys');
+	switch(WPCPN::$cache_config['type']) {
+		case 'fragment-caching':
+			$cache_keys = get_site_option('wpcpn_cache_keys');
 
-		if ( $cache_keys && isset($cache_keys[$group][$section]) ) {
-			foreach($cache_keys[$group][$section] as $cache_key) {
-				delete_transient('wpcpn-fragments_' . $cache_key); //@TODO improve this
+			if ( $cache_keys && isset($cache_keys[$group][$section]) ) {
+				foreach($cache_keys[$group][$section] as $cache_key) {
+					delete_transient('wpcpn-fragments_' . $cache_key); //@TODO improve this
+				}
 			}
-		}
+		break;
+		case 'wp-super-cache':
+			//$GLOBALS["super_cache_enabled"] = 1;
+			if ( function_exists('wp_cache_clear_cache') ) {
+				$GLOBALS["super_cache_enabled"] = 1;
+				wp_cache_clear_cache();
+			}
+		break;
 	}
 }
 
@@ -84,7 +94,7 @@ function wpcpn_get_posts_list( $group_name, $section_name ) {
 function wpcpn_show_posts_section( $group_name, $section_name, Array $template, $params = array() )  {
 	$section_posts	= wpcpn_get_posts_section( $group_name, $section_name, $params );
 	if ( $section_posts ) {
-		if ( wpcpn_is_cache_active() && wpcpn_should_cache($group_name, $section_name) ) {
+		if ( wpcpn_is_cache_active() && wpcpn_should_fragment_cache($group_name, $section_name) ) {
 			$cache = wpcpn_cache_get_instance($group_name, $section_name, $template, $params);
 			if ( ! $cache->output() ) {
 				echo '<!-- Started WPCPN Fragment Cache block ' . date('Y-m-d H:i:s'). ' -->' . PHP_EOL;
