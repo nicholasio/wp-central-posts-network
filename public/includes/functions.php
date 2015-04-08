@@ -54,10 +54,17 @@ function wpcpn_cache_delete($group, $section) {
 			}
 		break;
 		case 'wp-super-cache':
-			//$GLOBALS["super_cache_enabled"] = 1;
 			if ( function_exists('wp_cache_clear_cache') ) {
 				$GLOBALS["super_cache_enabled"] = 1;
 				wp_cache_clear_cache();
+			}
+		break;
+		case 'w3-total-cache':
+			// Clear all W3 Total Cache
+			if( class_exists('W3_Plugin_TotalCacheAdmin') )
+			{
+			    $plugin_totalcacheadmin = & w3_instance('W3_Plugin_TotalCacheAdmin');
+			    $plugin_totalcacheadmin->flush_all();
 			}
 		break;
 	}
