@@ -153,7 +153,7 @@ The `$restrictions_params` are the `array('custom_params')` defined in the confi
 ##### Before Select Filter #####
 If you want to perform an action when the user try do add a post to a given section, you can define a ajax call with the following tag: `wp_ajax_wpcpn_before_select_{group}_{section}`. Eg:
 ```php
-add_action('wp_ajax_wpcpn_before_select_homepage_highlights_news_on_select', 'mysite_wpcpn_banner_on_select');
+add_action('wp_ajax_wpcpn_before_select_homepage_highlights_news', 'mysite_wpcpn_banner_on_select');
 function mysite_wpcpn_banner_on_select() {
       $blog_id = $_GET['blog_id'];
       $post_id = $_GET['post_id'];
