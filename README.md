@@ -45,32 +45,24 @@ function mysite_wpcpn_posts_section() {
                'description'        => 'Old News Posts',
                'max_posts'          => 3,
                'sites'              => 'all', 
-               'restrictions'       => array( 
-                                       'taxonomy' => array(
-                                          'taxonomy_slug' => 'category',
-                                          'term_slug'     => 'old-news-cat'
-                                       ),
-                                       //'custom_restriction' => array( 'params' )
-                                    ),
                'include_main_site'  => false
             ),
 
          ), //sections
     ), //homepage_highliths
+    'homepage_secondary' => array(
+       'name' => 'Posts Secundários',
+       'sections' => array(
+          'other-news' => array(
+             'name'               => 'Others News',
+             'description'        => 'Others News Posts',
+             'max_posts'          => 3,
+             'site'              => 'all',
+             'include_main_site'  => false
+          ),
 
-      'homepage_secondary' => array(
-         'name' => 'Posts Secundários',
-         'sections' => array(
-            'other-news' => array(
-               'name'               => 'Others News',
-               'description'        => 'Others News Posts',
-               'max_posts'          => 3,
-               'site'              => 'all',
-               'include_main_site'  => false
-            ),
-
-         ) //sections
-      ) //homepage_secondary
+       ) //sections
+    ) //homepage_secondary
 
   );
 }
@@ -97,14 +89,14 @@ if ( function_exists('wpcpn_show_posts_section')) {
 
 Of course you need to define the file `partials/content-featured.php`, you can define it using regular WordPress functions, you don't need to perform the loop, the plugin already does it for you. 
 ```html
-<article class="col-md-12 clearfix">
-  <figure class="col-md-8 col-sm-6 col-xs-12">
+<article>
+  <figure>
       <a href="<?php the_permalink(); ?>">            
         <?php the_post_thumbnail(); ?>
       </a>
   </figure>
-  <section class="col-md-4 col-sm-6 col-xs-12 no-padding-left">
-      <h5 class="text-primary">
+  <section>
+      <h5>
           <small><?php echo get_the_time('j F, Y'); ?></small>
       </h5>
       <a href="<?php the_permalink(); ?>">
@@ -114,6 +106,76 @@ Of course you need to define the file `partials/content-featured.php`, you can d
   </section>
 </article>
 ```
+
+#### Advanced Use ####
+#####Restrictions #####
+It's possible to define aditional restrictions to filter the posts of a site that can be selected for a given section.
+At the moment we have one native restriction, but you can define your own custom restriction.
+Eg:
+```php
+...
+'old-news' => array(
+   'name'               => 'Old News',
+   'description'        => 'Old News Posts',
+   'max_posts'          => 3,
+   'sites'              => 'all', 
+   'include_main_site'  => false,
+   'restrictions'       => array( 
+                           'taxonomy' => array(
+                              'taxonomy_slug' => 'category',
+                              'term_slug'     => 'news'
+                           ),
+                           'has_banner' => array( 'custom_params' ) //A custom restriction
+                    ),
+),
+...
+```
+The native restriction `taxonomy` receives a `taxonomy_slug`and `term_slug` and check if the post has the `term_slug` in the `taxonomy_slug`. In the example we are loading only the posts that has the `news` category.
+
+To use a custom restriction, you must define it in the sections config array and create a filter hook with the tag: ` wpcpn_restriction_{your_custom_unique_restriction}` Eg:
+```php
+add_filter('wpcpn_restriction_has_banner', 'mysite_wpcpn_has_banner', 1, 4);
+function mysite_wpcpn_has_banner($pass, $post, $blog_id, $restrictions_params) {
+   // if the post failed in previews restrictions, we do not need to check this restriction anymore
+   if ( ! $pass ) return false; 
+
+   //we don't need to execute swtich_to_blog, we're already on the right context.
+   $bannerimg = get_post_meta($post->ID, '_inner_banner_image');
+   if ( $bannerimg )
+      return true;
+   else
+      return false;
+}
+```
+
+The `$restrictions_params` are the `array('custom_params')` defined in the configuration of restrictions.
+
+##### Before Select Filter #####
+If you want to perform an action when the user try do add a post to a given section, you can define a ajax call with the following tag: `wp_ajax_wpcpn_before_select_{group}_{section}_on_select`. Eg:
+```php
+add_action('wp_ajax_wpcpn_before_select_homepage_highlights_news_on_select', 'mysite_wpcpn_banner_on_select');
+function mysite_wpcpn_banner_on_select() {
+      $blog_id = $_GET['blog_id'];
+      $post_id = $_GET['post_id'];
+
+      //with ajax we need to switch_to_blog
+      switch_to_blog($blog_id);
+
+      $bannerimg = get_post_meta($post_id, '_inner_banner_image');
+
+      restore_current_blog();
+      
+      if ( $bannerimg )
+         echo 1; //can add
+      else
+         echo 0; //cant't add
+      
+      die();
+}
+```
+If the ajax call echoes 1, then the post can be added, if not, it can't. 
+You can use the before select filter instead a custom restriction if you want.
+
 #### Cache ####
 WordPress Multisite is a heavy system and you may consider using a cache system if you have load issues. This plugins integrates with W3-Total-Cache and WP-Super-Cache (basically it flush the cache when the posts list of a given section changes).
 
