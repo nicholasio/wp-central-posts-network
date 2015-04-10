@@ -126,7 +126,6 @@ class WPCPN_Post_Selector {
 	 * @since    1.0.0
 	 */
 	public function display_plugin_admin_page() {
-		$this->model = new WPCPN_Post_Selector_Model();
 		include_once( 'views/post-selector/admin.php' );
 	}
 

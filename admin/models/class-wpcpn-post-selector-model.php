@@ -29,16 +29,6 @@ class WPCPN_Post_Selector_Model {
 	public $arrPosts;
 
 	/**
-	 * Carrega todas as informações referentes ao Model
-	 *
-	 * @since     1.0.0
-	 */
-	public function __construct() {
-		$this->blogs_ids 	= WPCPN::get_blog_ids();
-		$this->arrPosts 	= $this->getAllPostsFromBlogs();
-	}
-
-	/**
 	 * Popula o array $arrPosts
 	 * It's not used anymore
 	 *
@@ -50,8 +40,10 @@ class WPCPN_Post_Selector_Model {
 	 *						BLOG_ID_N => ....
 	 *				);
 	 * @since     1.0.0
+	 * @deprecated
 	 */
 	public function getAllPostsFromBlogs() {
+		$this->blogs_ids 	= WPCPN::get_blog_ids();
 		//Não faça o cache dos posts resgatados
 		wp_suspend_cache_addition();
 
