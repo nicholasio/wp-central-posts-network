@@ -41,16 +41,16 @@ function mysite_wpcpn_posts_section() {
                'include_main_site'  => false //should posts of main site be included?
             ),
             'old-news' => array(
-               'name'               => 'Processos Seletivos',
-               'description'        => 'Posts que serão exibidos na seção de processos seletivos',
+               'name'               => 'Old News',
+               'description'        => 'Old News Posts',
                'max_posts'          => 3,
-               'blogs'              => 'all', //blogs       => array(2, 3, 4)
+               'sites'              => 'all', 
                'restrictions'       => array( 
                                        'taxonomy' => array(
                                           'taxonomy_slug' => 'category',
-                                          'term_slug'     => 'processos-seletivos'
+                                          'term_slug'     => 'old-news-cat'
                                        ),
-                                       //'has_banner' => array( 'params' )
+                                       //'custom_restriction' => array( 'params' )
                                     ),
                'include_main_site'  => false
             ),
@@ -62,12 +62,11 @@ function mysite_wpcpn_posts_section() {
          'name' => 'Posts Secundários',
          'sections' => array(
             'other-news' => array(
-               'slug'               => 'other-news',
-               'name'               => 'Outras notícias',
-               'description'        => 'Posts que serão exibidos na seção de outras notícias',
+               'name'               => 'Others News',
+               'description'        => 'Others News Posts',
                'max_posts'          => 3,
-               'blogs'              => 'all', //blogs       => array(2, 3, 4)
-               'include_main_blog'  => false
+               'site'              => 'all',
+               'include_main_site'  => false
             ),
 
          ) //sections
