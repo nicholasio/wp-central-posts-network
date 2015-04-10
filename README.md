@@ -16,7 +16,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Description ##
 
-This plugin adds a UI on the main site of a Network that let you choose posts of any site of your network and associate it with sections that you must define via a hook filter. Then you can show up this sections on your main site via a simple API.
+This plugin adds a UI on the main site admin panel of a Network that let you choose posts of any site of your network and associate it with sections that you must define via a hook filter. Then you can show up this sections on your main site via a simple API.
 
 ### How it works ####
 
