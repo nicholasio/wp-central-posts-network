@@ -18,6 +18,130 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This plugin adds a UI on the main site of a Network that let you choose posts of any site of your network and associate it with sections that you must define via a hook filter. Then you can show up this sections on your main site via a simple API.
 
+### How it works ####
+
+#### Defining groups and sections ####
+To actually use this plugins, first you must define the group and the sections that you wanna put posts, in the example below, it defines two groups: `homepage_highlights` and `homepage_secondary`, the first group has two sections `news` and `old-news`, the second group has only one section called `other-news`. This groups and sections will show up in `Main Site Panel => Network Post Selector` 
+```php
+add_filter('wpcpn_posts_section', 'mysite_wpcpn_posts_section');
+function mysite_wpcpn_posts_section() {
+
+  return array(
+    //the key of this array defines a group, each group creates a tab
+    'homepage_highlights' => array( 
+      //the name of the group
+      'name'  => 'Posts Highlights', 
+      'sections'  => array( //the sections arrays holds all sections definitions
+            'news' => array( //the key is the slug of the sections
+               'name'               => 'News', //The Name
+               'description'        => 'News section', //Descriptions
+               'max_posts'          => 4, //Max Posts in this sections
+               //sites => array(2, 3, 4) //'all' or specify the blogs_id that you canpull posts
+               'sites'              => 'all',  
+               'include_main_site'  => false //should posts of main site be included?
+            ),
+            'old-news' => array(
+               'name'               => 'Processos Seletivos',
+               'description'        => 'Posts que serão exibidos na seção de processos seletivos',
+               'max_posts'          => 3,
+               'blogs'              => 'all', //blogs       => array(2, 3, 4)
+               'restrictions'       => array( 
+                                       'taxonomy' => array(
+                                          'taxonomy_slug' => 'category',
+                                          'term_slug'     => 'processos-seletivos'
+                                       ),
+                                       //'has_banner' => array( 'params' )
+                                    ),
+               'include_main_site'  => false
+            ),
+
+         ), //sections
+    ), //homepage_highliths
+
+      'homepage_secondary' => array(
+         'name' => 'Posts Secundários',
+         'sections' => array(
+            'other-news' => array(
+               'slug'               => 'other-news',
+               'name'               => 'Outras notícias',
+               'description'        => 'Posts que serão exibidos na seção de outras notícias',
+               'max_posts'          => 3,
+               'blogs'              => 'all', //blogs       => array(2, 3, 4)
+               'include_main_blog'  => false
+            ),
+
+         ) //sections
+      ) //homepage_secondary
+
+  );
+}
+```
+
+#### Displaying posts on the main site ####
+To display posts on the main site you need to call a function named `wpcpn_show_posts_section` and pass the correct parameters:
+```php
+if ( function_exists('wpcpn_show_posts_section')) {
+      wpcpn_show_posts_section(
+                      'homepage_highlights', //group slug
+                      'news',  //sections slug
+                      array(  //will load the file partials/content-featured.php
+                          'template_slug' => 'partials/content', 
+                          'template_name' => 'featured' 
+                      ),
+                      array(
+                          'limit'         => 3 //Show only 3 posts
+                          'offset'        => 1 //Bypass the first post
+                      ) 
+      );
+  }
+```
+
+Of course you need to define the file `partials/content-featured.php`, you can define it using regular WordPress functions, you don't need to perform the loop, the plugin already does it for you. 
+```html
+<article class="col-md-12 clearfix">
+  <figure class="col-md-8 col-sm-6 col-xs-12">
+      <a href="<?php the_permalink(); ?>">            
+        <?php the_post_thumbnail(); ?>
+      </a>
+  </figure>
+  <section class="col-md-4 col-sm-6 col-xs-12 no-padding-left">
+      <h5 class="text-primary">
+          <small><?php echo get_the_time('j F, Y'); ?></small>
+      </h5>
+      <a href="<?php the_permalink(); ?>">
+          <h4><?php the_title(); ?></h4>            
+      </a>
+      <p><?php the_excerpt() ?></p>
+  </section>
+</article>
+```
+#### Cache ####
+WordPress Multisite is a heavy system and you may consider using a cache system if you have load issues. This plugins integrates with W3-Total-Cache and WP-Super-Cache (basically it flush the cache when the posts list of a given section changes).
+
+It also comes with a simple fragment caching system, this system will not speed up you site, but it will eliminate the aditional load added by the plugin.
+
+As this plugin can add an aditional load to you site, consider using a good server too.
+
+To use one of the cache choices you must tell to the plugin.
+```php
+add_filter('wpcpn_cache_config', 'mysite_wpcpn_cache_config');
+
+function mysite_wpcpn_cache_config( $config ) {
+  //return false; //return false to deactivate
+  //return array('type' => 'w3-total-cache'); // Use this to integrate to w3-total-cache
+  //return array('type' => 'wp-super-cache'); // Use this to integrate to wp-super-cache
+  return array( // Use this to use simple fragment-caching
+    'type'       => 'fragment-caching',
+    'expiration' => 12 * HOUR_IN_SECONDS, //in seconds
+    'cache'      => array( //define what sections to cache
+      'homepage_highlights' => array('news','old-news'),
+      'homepage_secondary'  => array('other-news')
+    )
+  );
+}
+```
+
+
 ## Installation ##
 
 To install just follow the installation steps of most WordPress plugin's:
