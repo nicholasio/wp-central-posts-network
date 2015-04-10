@@ -1199,9 +1199,7 @@ body .ui-tooltip {
 
 /*.sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }*/
 /*.sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; }*/
-/*.sortable li .dashicons { margin: 3px; }
-.sortable li span { position: absolute; /*margin-left: -1.3em; }*/
-
+/*.sortable li .dashicons { margin: 3px; }*/
 .sortable > li:first-child {
 	border-top: 1px solid #f8f8f8;
 }
@@ -1219,6 +1217,7 @@ body .ui-tooltip {
 	color: #0074a2;
 	cursor: pointer;
 }
+.sortable li span { position: absolute; right: 30px; bottom: 10px; }
 .sortable > li.wpcpn-no-posts-found {
 	padding-top: 10px;
 }
@@ -1260,4 +1259,4 @@ body .ui-tooltip {
 display: block; float:left; margin: 5px; display: none; }
 
 .wpcpn-all-posts { position: relative; }
-.wpcpn-all-posts .wpcpn-ajax-loader { margin: 0 auto;  position: absolute; top: 100px; left: 49%;}
+.wpcpn-all-posts >  .wpcpn-ajax-loader { margin: 0 auto;  position: absolute; top: 100px; left: 49%;}

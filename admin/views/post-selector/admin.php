@@ -41,8 +41,8 @@
 				echo '<div id="' . $currentGroupTab . '" class="wpcpn-group">';
 					foreach($currentGroup['sections'] as $section_slug => $section) {
 						$perform_on_select = false;
-						$ajaxName = 'wp_ajax_wpcpn_' . $section_slug . '_on_select';
-						$on_error = '';
+						$ajaxName = 'wp_ajax_wpcpn_before_select_' . $currentGroupTab . '_' . $section_slug . '_on_select';
+						$on_error = __('This post cannot be added to this section'	, 'wpcpn');
 						if ( has_action($ajaxName) ) {
 							$perform_on_select = true;
 							if ( isset($section['on_error']) )

@@ -179,14 +179,14 @@
 
 					}
 
-					if ( this.$currentSection.attr('data-on-select') == '1' ) {
+					if ( canAdd && this.$currentSection.attr('data-on-select') == '1' ) {
 						var that = this;
 						$o_li.find('.wpcpn-ajax-loader').show();
 						$.ajax({
 							url  : ajaxurl,
 							type : 'GET',
 							data : {
-								'action'  : 'wpcpn_' + that.currentNamespace + '_on_select',
+								'action'  : 'wpcpn_before_select_' + that.currentGroup + '_' + that.currentNamespace + '_on_select',
 								'post_id' :  $o_li.attr('data-post-id'),
 								'blog_id' :  $o_li.parent().attr('data-current-blog-id')
 							},

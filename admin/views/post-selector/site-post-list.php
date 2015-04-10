@@ -34,6 +34,7 @@
 			<?php echo $post->post_title; ?>
 			<span class="wpcpn-site-info"><?php echo get_blog_option($blog_id, 'blogname'); ?></span>
 			<a class="dashicons <?php echo $class; ?>" href="#"></a>
+			<span class="wpcpn-ajax-loader"></span>
 		</li>
 
 	<?php 	endforeach; //Inner foreach;
