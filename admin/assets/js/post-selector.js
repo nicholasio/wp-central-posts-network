@@ -11,6 +11,7 @@
 			$posts_selected   : '',
 			$posts_to_choose  : '',
 			$search           : '',
+			$search_selected  : '',
 			$siteChooser      : '',
 			$btnSavePostList  : '',
 			$section          : $(".wpcpm-section"),
@@ -20,8 +21,16 @@
 			currentGroup      : '',
 
 			init : function() {
-				//Configures the current section: the current section is where the mouse is
+				/**
+				 * Configures the current section: the current section is where the mouse is
+				 * We need the mouseover event because if the user refreshes the page and mouse
+				 * stays in the section the browser does not trigger mouseenter, so we use mouseover only once
+				 */
+				this.$section.on('mouseover', $.proxy(this.setNameSpace, this ) );
+				this.$section.off('mouseover', $.proxy(this.setNameSpace, this ) );
 				this.$section.on('mouseenter', $.proxy(this.setNameSpace, this ) );
+
+				$('.wpcpn-site-chooser').select2();
 			},
 
 			/**
@@ -29,6 +38,7 @@
 			 */
 			liveFilter  : function() {
 				this.$search.fastLiveFilter(this.namespaceSelector + ' .wpcpn-posts-to-choose');
+				this.$search_selected.fastLiveFilter(this.namespaceSelector + ' .wpcpn-posts-selected');
 			},
 
 			/**
@@ -46,8 +56,9 @@
 				this.$posts_to_choose = $( this.namespaceSelector + ' .wpcpn-posts-to-choose');
 				this.$posts_selected  = $( this.namespaceSelector + ' .wpcpn-posts-selected');
 				this.$btnSavePostList = $( this.namespaceSelector + ' .wpcpn-save-post-list');
-				this.$search          = $( this.namespaceSelector + ' .wpcpn-search');
-				this.$ajaxLoader      = $( this.namespaceSelector + ' > .wpcpn-ajax-loader');
+				this.$search          = $( this.namespaceSelector + ' .wpcpn-search-posts .wpcpn-search');
+				this.$search_selected = $( this.namespaceSelector + ' .wpcpn-search-posts-selected .wpcpn-search');
+				this.$ajaxLoader      = $( this.namespaceSelector + ' .wpcpn-ajax-loader-btn ');
 
 				this.initSortableLists();
 
@@ -66,7 +77,7 @@
 			 *  Remove all of the event handlers of the elements, this is necessary to avoid duplicate event handlers
 			 */
 			unbind : function() {
-				this.$siteChooser.off('change' , $.proxy( this.handleSiteChooser, this) );
+				this.$siteChooser.off('select2-selecting' , $.proxy( this.handleSiteChooser, this) );
 				this.$posts_to_choose.off('click','li a', $.proxy( this.addPostItem, this) );
 				this.$posts_selected.off('click', 'li a', $.proxy( this.removePostItem, this) );
 				this.$btnSavePostList.off('click', $.proxy( this.savePostList, this) );
@@ -77,7 +88,7 @@
 			 *
 			 */
 			bind  : function() {
-				this.$siteChooser.on('change' , $.proxy( this.handleSiteChooser, this) );
+				this.$siteChooser.on('select2-selecting' , $.proxy( this.handleSiteChooser, this) );
 				this.$posts_to_choose.on('click','li a', $.proxy( this.addPostItem, this) );
 				this.$posts_selected.on('click', 'li a', $.proxy( this.removePostItem, this) );
 				this.$btnSavePostList.on('click', $.proxy( this.savePostList, this) );
@@ -95,13 +106,13 @@
 			 */
 			handleSiteChooser : function(evt) {
 				var that = this;
-				var $obj = $(evt.currentTarget);
+				//var $obj = $(evt.currentTarget);
 
 				//Invalid option
-				if ( $obj.val() == -1 )
+				if ( evt.id == -1 )
 					return;
 
-				var id = $obj.val();
+				var id = evt.choice.id;
 
 				this.selectSite( id );
 			},
@@ -116,8 +127,12 @@
 				var that              = this;
 				var _$posts_to_choose = this.$posts_to_choose;
 
-				var $ajaxLoader       =  this.$posts_to_choose.siblings('.wpcpn-ajax-loader');
+				var $ajaxLoader       = this.$posts_to_choose.siblings('.wpcpn-ajax-loader');
 				var $btnSavePostList  = this.$btnSavePostList;
+
+				_$posts_to_choose.find(" > li ").fadeOut('fast', function() {
+					_$posts_to_choose.html('');
+				});
 
 				this.loading( true, $ajaxLoader, $btnSavePostList );
 
@@ -127,7 +142,7 @@
 					'section' : namespace,
 					'group'	  : that.currentGroup
 				}, function( result ) {
-					_$posts_to_choose .html( result );
+					_$posts_to_choose.html( result );
 					that.liveFilter();
 					that.loading( false, $ajaxLoader, $btnSavePostList );
 				});

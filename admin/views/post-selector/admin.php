@@ -41,7 +41,7 @@
 				echo '<div id="' . $currentGroupTab . '" class="wpcpn-group">';
 					foreach($currentGroup['sections'] as $section_slug => $section) {
 						$perform_on_select = false;
-						$ajaxName = 'wp_ajax_wpcpn_' . $section['slug'] . '_on_select';
+						$ajaxName = 'wp_ajax_wpcpn_' . $section_slug . '_on_select';
 						$on_error = '';
 						if ( has_action($ajaxName) ) {
 							$perform_on_select = true;

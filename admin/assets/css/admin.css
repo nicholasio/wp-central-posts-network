@@ -1179,11 +1179,85 @@ body .ui-tooltip {
 	border-radius: 8px;
 }
 
-.sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-.sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; }
-.sortable li .dashicons { margin: 3px; }
-.sortable li span { position: absolute; /*margin-left: -1.3em;*/ }
+
+
+.wpcpn-wrapper-box {
+	background: #FFF;
+	border-radius: 2px;
+	border: 1px solid #CCC;
+}
+.wpcpn-wrapper-search {
+	padding: 10px;
+}
+.wpcpn-area {
+	border-top: 1px solid #CCC;
+}
+.wpcpn-area > p {
+	text-align: center;
+	padding: 0 0 10px 0;
+}
+
+/*.sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }*/
+/*.sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; }*/
+/*.sortable li .dashicons { margin: 3px; }
+.sortable li span { position: absolute; /*margin-left: -1.3em; }*/
+
+.sortable > li:first-child {
+	border-top: 1px solid #f8f8f8;
+}
+
+.sortable > li {
+	box-sizing: border-box;
+	font-size: 12px;
+	list-style-type: none;
+	margin:0;
+	padding: 5px;
+	width: 100%;
+	position: relative;
+	border-bottom: 1px solid #f8f8f8;
+	padding: 20px 10px 5px 10px;
+	color: #0074a2;
+	cursor: pointer;
+}
+.sortable > li.wpcpn-no-posts-found {
+	padding-top: 10px;
+}
+.sortable > li:hover {
+	background: #eaf2fa;
+	box-shadow: #d6e1ec 0 0 0 1px;
+	-moz-box-shadow: #d6e1ec 0 0 0 1px;
+	-webkit-box-shadow: #d6e1ec 0 0 0 1px;
+}
+.sortable > li > .wpcpn-site-info {
+	position: absolute;
+	top: 3px;
+	left: 10px;
+	color: #999;
+	font-size: 12px;
+}
+.sortable > li .dashicons {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	color: #999;
+}
+
+.sortable > li:hover .dashicons {
+	color: #777;
+}
+
+.wpcpn-table td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.wpcpn-search { width: 100%; padding: 4px;}
 .wpcpn-posts-to-choose-holder { min-height: 300px; width: 500px; position: relative;}
 .wpcpn-posts-to-choose, .wpcpn-posts-selected { height: 200px; overflow: auto; }
+.wpcpn-posts-selected { height: 250px; }
 .wpcpn-save-post-list { float:left;}
-.wpcpn-ajax-loader { background:url(../img/ajax-loader.gif); width: 16px; height: 16px; display: block; float:left; margin: 5px; display: none; };
+.wpcpn-ajax-loader { background:url(../img/ajax-loader.gif); width: 16px; height: 16px;
+display: block; float:left; margin: 5px; display: none; }
+
+.wpcpn-all-posts { position: relative; }
+.wpcpn-all-posts .wpcpn-ajax-loader { margin: 0 auto;  position: absolute; top: 100px; left: 49%;}

@@ -72,6 +72,7 @@ class WPCPN_Post_Selector {
 		$screen = get_current_screen();
 
 		if ( $this->screen_id == $screen->id ) {
+			wp_enqueue_style( $this->plugin_slug . '-select2-styles', plugins_url( 'assets/css/select2.min.css', __FILE__ ), array(), WPCPN::VERSION );
 			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), WPCPN::VERSION );
 		}
 
@@ -86,6 +87,7 @@ class WPCPN_Post_Selector {
 								null,
 								WPCPN::VERSION
 				 			 );
+			wp_enqueue_script( $this->plugin_slug . '-select2-js', plugins_url( 'assets/js/select2.js', __FILE__ ), array('jquery'), WPCPN::VERSION );
 			wp_enqueue_script( $this->plugin_slug . '-post-selector-script',
 							   plugins_url( 'assets/js/post-selector.js', __FILE__ ),
 							   array( $this->plugin_slug . '-fast-live-filters','jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-autocomplete' , 'jquery' ),
@@ -105,11 +107,15 @@ class WPCPN_Post_Selector {
 		$group_slug     = esc_sql($_GET['group']);
 
 		$blog_posts     = WPCPN_Post_Selector_Model::getPostsFromBlog($blog_id);
-		$posts_selected = WPCPN_Post_Selector_Model::getPostsList($group_slug, $section_slug);
-		$sections       = apply_filters('wpcpn_posts_section', array());
-		$section        = $sections[$group]['sections'][$section_slug];
+		if ( ! empty($blog_posts) ) {
+			$posts_selected = WPCPN_Post_Selector_Model::getPostsList($group_slug, $section_slug);
+			$sections       = apply_filters('wpcpn_posts_section', array());
+			$section        = $sections[$group_slug]['sections'][$section_slug];
 
-		include( 'views/post-selector/site-post-list.php' );
+			include( 'views/post-selector/site-post-list.php' );
+		} else {
+			echo '<li class="wpcpn-no-posts-found">' . __('No Posts found for this site', 'wpcpn') . '</li>';
+		}
 
 		die();
 	}

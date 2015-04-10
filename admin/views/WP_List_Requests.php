@@ -12,6 +12,7 @@ Class WP_List_Requests extends WP_List_Table {
 
 	public function __construct( $recents = true) {
 		$this->recents = $recents;
+		parent::__construct();
 	}
 
 	public function get_columns() {
@@ -33,6 +34,17 @@ Class WP_List_Requests extends WP_List_Table {
 		}
 
 		return $columns;
+	}
+
+	public function get_bulk_actions() {
+		$actions = array(
+
+		    'delete'    => 'Delete',
+
+		    'parsing'    => 'Parsen'
+		);
+
+		return $actions;
 	}
 
 	public function get_data($per_page, $current_page) {
@@ -85,7 +97,8 @@ Class WP_List_Requests extends WP_List_Table {
 	}
 
 	public function column_default( $item,  $column_name ) {
-		$value = $item->{$column_name};
+		if ( isset($item->{$column_name}) )
+			$value = $item->{$column_name};
 		switch( $column_name ) {
 			case 'ID':
 			case 'message':
@@ -130,6 +143,7 @@ Class WP_List_Requests extends WP_List_Table {
 				}
 			break;
 			case 'post_id':
+				if ( ! isset($this->curr_post->post) ) return;
 				return "<strong>{$this->curr_post->post->post_title}</strong> <br /> <a target='_blank' href='{$this->curr_post->url}'>". __('Edit Post', 'wpcpn') ."</a> | <a target='_blank' href='{$this->curr_post->permalink}'>".__('View Post', 'wpcpn')."</a> ";
 			break;
 			case 'actions':
@@ -161,7 +175,7 @@ Class WP_List_Requests extends WP_List_Table {
 				return " {$approve} {$sep} {$reject} {$sep2} {$awaiting}";
 			break;
 			default:
-				return print_r($item, true);
+				//return print_r($item, true);
 			break;
 		}
 	}
