@@ -30,10 +30,10 @@
 
 	?>
 
-		<li class="ui-state-default" data-uid="<?php echo $uid ?>" data-post-id="<?php echo $post->ID; ?>" data-state="<?php echo $state; ?>">
-			<?php echo get_blog_option($blog_id, 'blogname') . ': ' . $post->post_title; ?>
+		<li data-uid="<?php echo $uid ?>" data-post-id="<?php echo $post->ID; ?>" data-state="<?php echo $state; ?>">
+			<?php echo $post->post_title; ?>
+			<span class="wpcpn-site-info"><?php echo get_blog_option($blog_id, 'blogname'); ?></span>
 			<a class="dashicons <?php echo $class; ?>" href="#"></a>
-			<span class="wpcpn-ajax-loader"></span>
 		</li>
 
 	<?php 	endforeach; //Inner foreach;

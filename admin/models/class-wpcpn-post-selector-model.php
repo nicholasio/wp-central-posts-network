@@ -105,9 +105,8 @@ class WPCPN_Post_Selector_Model {
 					'posts_per_page' 	=> -1
 				)
 			);
-
-
-			$arrPosts[$post_type] = $posts;
+			if ( $posts )
+				$arrPosts[$post_type] = $posts;
 
 		}
 

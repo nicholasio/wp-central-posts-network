@@ -9,7 +9,7 @@ function wpcpn_get_network_posts(Array $args) {
 	// Prepare the SQL query with $wpdb
 	global $wpdb;
 
-	$args = wp_parse_args( $args , 
+	$args = wp_parse_args( $args ,
 					array(
 						'taxonomy_slug' => '',
 						'term_slug' 	=> '',
@@ -17,13 +17,13 @@ function wpcpn_get_network_posts(Array $args) {
 						'size'			=> 5,
 						'paged'			=> 1,
 						's'				=> ''
-					) 
+					)
 			);
 
 	$base_prefix = $wpdb->get_blog_prefix(0);
 	$base_prefix = str_replace( '1_', '' , $base_prefix );
 
-	// Because the get_blog_list() function is currently flagged as deprecated 
+	// Because the get_blog_list() function is currently flagged as deprecated
 	// due to the potential for high consumption of resources, we'll use
 	// $wpdb to roll out our own SQL query instead. Because the query can be
 	// memory-intensive, we'll store the results using the Transients API
@@ -89,7 +89,7 @@ function wpcpn_get_network_posts(Array $args) {
 
 			$query .= " ORDER BY post_date DESC LIMIT $offset, $limit ";
 		}
-	    
+
 	}
 	// Sanitize and run the query
 	//$_query = $wpdb->prepare($query, $site->blog_id);
@@ -113,11 +113,11 @@ function wpcpn_get_network_posts(Array $args) {
  */
 function wpcpn_single_cat_title( $prefix = '', $display = true ){
 	$term_slug	= esc_sql( get_query_var('wpcpn_network_term') );
-	
+
 	$term_obj	= get_term_by( 'slug', $term_slug, esc_sql( get_query_var('wpcpn_network_tax') ) );
-	
+
 	$term_name	= apply_filters('wpcpn_single_cat_title', $term_obj->name);
-	
+
 	$term_name	= $prefix . $term_name;
 
 	if ( $display )
@@ -131,7 +131,7 @@ function wpcpn_single_cat_title( $prefix = '', $display = true ){
  * @return bool Verdadeiro se estiver em uma listagem global de posts de uma dada taxonomia
  */
 function wpcpn_is_network_taxonomy( $taxonomy = 'category' ) {
-	return 	get_query_var('wpcpn_network_term') && 
+	return 	get_query_var('wpcpn_network_term') &&
 			get_query_var('wpcpn_query_type') &&
 			$taxonomy === esc_sql( get_query_var('wpcpn_network_tax') ) ;
 }
@@ -141,7 +141,7 @@ function wpcpn_is_network_taxonomy( $taxonomy = 'category' ) {
  * @return bool Verdadeiro se estive na página de resultados globais de busca
  */
 function wpcpn_is_network_search( ) {
-	return 	get_query_var('wpcpn_network_search') && 
+	return 	get_query_var('wpcpn_network_search') &&
 			get_query_var('wpcpn_query_type');
 }
 
