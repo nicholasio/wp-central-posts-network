@@ -186,7 +186,7 @@
 							url  : ajaxurl,
 							type : 'GET',
 							data : {
-								'action'  : 'wpcpn_before_select_' + that.currentGroup + '_' + that.currentNamespace + '_on_select',
+								'action'  : 'wpcpn_before_select_' + that.currentGroup + '_' + that.currentNamespace,
 								'post_id' :  $o_li.attr('data-post-id'),
 								'blog_id' :  $o_li.parent().attr('data-current-blog-id')
 							},
