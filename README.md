@@ -5,7 +5,7 @@ A WordPress Multisite Plugin that let you choose any posts on any site in the ne
 
 ## About ##
 
-Contributors: nicholasio
+Contributors: nicholas_io
 Donate link: 
 Tags: multisite, posts-selector, global,posts
 Requires at least: 4.1
@@ -21,7 +21,7 @@ This plugin adds a UI on the main site admin panel of a Network that let you cho
 ### How it works ####
 
 #### Defining groups and sections ####
-To actually use this plugins, first you must define the group and the sections that you wanna put posts, in the example below, it defines two groups: `homepage_highlights` and `homepage_secondary`, the first group has two sections `news` and `old-news`, the second group has only one section called `other-news`. This groups and sections will show up in `Main Site Panel => Network Post Selector` 
+To actually use this plugins, first you must define the groups and the sections that you wanna put posts, in the example below, it defines two groups: `homepage_highlights` and `homepage_secondary`, the first group has two sections `news` and `old-news`, the second group has only one section called `other-news`. This groups and sections will show up in `Panel => Network Post Selector` on main site panel.
 ```php
 add_filter('wpcpn_posts_section', 'mysite_wpcpn_posts_section');
 function mysite_wpcpn_posts_section() {
@@ -69,7 +69,7 @@ function mysite_wpcpn_posts_section() {
 ```
 
 #### Displaying posts on the main site ####
-To display posts on the main site you need to call a function named `wpcpn_show_posts_section` and pass the correct parameters:
+To display posts on the main site you need to call a function named `wpcpn_show_posts_section` and pass the correct parameters, you should use this function on the theme used in the main site. If you have two sites with the same same theme, you can check if the current site is the main site, or you can create a child theme and use it only on the main site.
 ```php
 if ( function_exists('wpcpn_show_posts_section')) {
       wpcpn_show_posts_section(
@@ -113,7 +113,7 @@ This functionality can be deactivate by using the following code:
 ```php
 add_filter('wpcpn_activate_feature_requests', 'mysite_wpcpn_disable_featured_requests');
 function mysite_wpcpn_disable_featured_requests( $status ) {
-  return true;
+  return false;
 }
 ```
 #### Advanced Use ####
@@ -139,7 +139,7 @@ Eg:
 ),
 ...
 ```
-The native restriction `taxonomy` receives a `taxonomy_slug`and `term_slug` and check if the post has the `term_slug` in the `taxonomy_slug`. In the example we are loading only the posts that has the `news` category.
+The native restriction `taxonomy` receives a `taxonomy_slug`and `term_slug` and check if the post has the `term_slug` in the `taxonomy_slug`. In the example we are loading only the posts that has the `news` category, so if the site has posts without the `news` category, they wont be selectable for that section.
 
 To use a custom restriction, you must define it in the sections config array and create a filter hook with the tag: ` wpcpn_restriction_{your_custom_unique_restriction}` Eg:
 ```php
@@ -169,9 +169,7 @@ function mysite_wpcpn_banner_on_select() {
 
       //with ajax we need to switch_to_blog
       switch_to_blog($blog_id);
-
       $bannerimg = get_post_meta($post_id, '_inner_banner_image');
-
       restore_current_blog();
       
       if ( $bannerimg )
@@ -179,14 +177,14 @@ function mysite_wpcpn_banner_on_select() {
       else
          echo 0; //cant't add
       
-      die();
+      die(); //Good practice finish ajax calls with die
 }
 ```
 If the ajax call echoes 1, then the post can be added, if not, it can't. 
-You can use the before select filter instead a custom restriction if you want.
+You can use the before select filter instead a custom restriction if you want. The main difference to restrictions are that with the before select filter, the post is still shown for selection even it can't be added to a section.
 
 #### Cache ####
-WordPress Multisite is a heavy system and you may consider using a cache system if you have load issues. This plugins integrates with W3-Total-Cache and WP-Super-Cache (basically it flush the cache when the posts list of a given section changes).
+WordPress Multisite is a heavy system and you may consider using a cache system if you have load issues. This plugins integrates with W3 Total Cache and WP Super Cache (basically it flushes the cache when the posts list of a given section changes).
 
 It also comes with a simple fragment caching system, this system will not speed up you site, but it will eliminate the aditional load added by the plugin.
 
