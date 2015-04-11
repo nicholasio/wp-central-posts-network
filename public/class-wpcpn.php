@@ -55,11 +55,6 @@ class WPCPN {
 	 * @since     1.0.0
 	 */
 	private function __construct() {
-		/*add_action( 'init', array( $this, 'init' ) );
-		add_action( 'template_redirect', array( $this, 'template_redirect' ) );
-		add_filter( 'query_vars', array( $this, 'query_vars') );
-		add_filter( 'category_link', array( $this, 'category_link'), 10, 2);*/
-
 		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
