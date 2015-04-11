@@ -11,7 +11,7 @@
 
 	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
 
-	<h3><span><?php _e('Define which posts will be displayed in each section.', 'wpcon'); ?></span></h3>
+	<h3><span><?php _e('Define which posts will be displayed in each section.', 'wpcpn'); ?></span></h3>
 	<div class="inside">
 		<h2 class="nav-tab-wrapper" style="padding:0 0 0 10px;">
 			<?php
