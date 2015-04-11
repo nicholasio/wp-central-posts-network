@@ -5,13 +5,15 @@
 					 ! in_array($post_type, $section['post_types']) )
 					continue;
 
-			//Só precisamos trocar/restaurar se tivermos restrições a serem processadas
+			//If we have restrictions, we need switch_to_blog
 			if (isset($section['restrictions']) )
 				switch_to_blog($blog_id);
 
+			$blogname = get_blog_option($blog_id, 'blogname');
+
 			foreach($_posts as $post ) :
 				/**
-				 * Processa as restrições, se algo não atender as restrições o post não é listado para essa section.
+				 * Process the restrictions, if something do not met the restrictions, then the post will not be shown
 				 */
 				if ( isset($section['restrictions']) &&
 					 ! WPCPN_Post_Selector_Model::processRestrictions($blog_id, $post, $section['restrictions']) ) {
@@ -38,13 +40,13 @@
 
 		<li data-uid="<?php echo $uid ?>" data-post-id="<?php echo $post->ID; ?>" data-state="<?php echo $state; ?>">
 			<?php echo $post->post_title; ?>
-			<span class="wpcpn-site-info"><?php echo get_blog_option($blog_id, 'blogname'); ?></span>
+			<span class="wpcpn-site-info"><?php echo $blogname; ?></span>
 			<a class="dashicons <?php echo $class; ?>" href="#"></a>
 			<span class="wpcpn-ajax-loader"></span>
 		</li>
 
 	<?php 	endforeach; //Inner foreach;
-		//Só precisamos trocar/restaurar o blog se tiver restrições a serem processadas
+		//if we had restrictions we need to restoure now
 		if (isset($section['restrictions']) )
 			restore_current_blog();
 	?>

@@ -22,7 +22,7 @@
 					if ( isset( $_GET['tab']) )
 						$currentGroupTab = $_GET['tab'];
 					else
-						$currentGroupTab = key($sections); // Primeiro 'key' do array
+						$currentGroupTab = key($sections);
 
 					foreach( $sections as $groupslug => $groups ) : ?>
 					<a href="?page=wpcpn&tab=<?php echo $groupslug; ?>" class="nav-tab <?php if ( $currentGroupTab == $groupslug ) echo 'nav-tab-active' ?> "><?php echo $groups['name']?></a>
