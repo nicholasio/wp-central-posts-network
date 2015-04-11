@@ -106,7 +106,16 @@ Of course you need to define the file `partials/content-featured.php`, you can d
   </section>
 </article>
 ```
+#### Feature Requests ####
+By the default admins of the sites can request that a single post shows up on the main site. This plugins adds a link to the edit.php page (the page that list the posts) called `Request Feadured in Home`. When the user clicks on the link, a pop up will show up and the user must provide a text describring the request.
 
+This functionality can be deactivate by using the following code:
+```php
+add_filter('wpcpn_activate_feature_requests', 'mysite_wpcpn_disable_featured_requests');
+function mysite_wpcpn_disable_featured_requests( $status ) {
+  return true;
+}
+```
 #### Advanced Use ####
 #####Restrictions #####
 It's possible to define aditional restrictions to filter the posts of a site that can be selected for a given section.
