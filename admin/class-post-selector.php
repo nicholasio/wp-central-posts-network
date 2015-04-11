@@ -106,12 +106,27 @@ class WPCPN_Post_Selector {
 		$section_slug   = esc_sql($_GET['section']);
 		$group_slug     = esc_sql($_GET['group']);
 
-		$blog_posts     = WPCPN_Post_Selector_Model::getPostsFromBlog($blog_id);
+		$sections       = apply_filters('wpcpn_posts_section', array());
+		$section        = $sections[$group_slug]['sections'][$section_slug];
+
+		$post_types 	= null;
+
+		//check which post types we need to get for this site
+		if ( isset( $section['post_types'] ) && is_array( $section['post_types'] ) ) {
+			if ( isset( $section['post_types'][$blog_id] ) && is_array( $section['post_types'][$blog_id] )  ) {
+				$post_types = $section['post_types'][$blog_id];
+			} else if ( ! is_array( reset($section['post_types']) ) ) {
+				$post_types = $section['post_types'];
+			} else {
+				$post_types = array('post');
+			}
+
+		}
+
+
+		$blog_posts     = WPCPN_Post_Selector_Model::getPostsFromBlog($blog_id, $post_types);
 		if ( ! empty($blog_posts) ) {
 			$posts_selected = WPCPN_Post_Selector_Model::getPostsList($group_slug, $section_slug);
-			$sections       = apply_filters('wpcpn_posts_section', array());
-			$section        = $sections[$group_slug]['sections'][$section_slug];
-
 			include( 'views/post-selector/site-post-list.php' );
 		} else {
 			echo '<li class="wpcpn-no-posts-found">' . __('No Posts found for this site', 'wpcpn') . '</li>';

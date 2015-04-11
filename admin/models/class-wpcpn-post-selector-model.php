@@ -22,7 +22,6 @@ class WPCPN_Post_Selector_Model {
 
 	/**
 	 * Return the posts from a given blog
-	 * This method can be called from ajax or a normal call
 	 *
 	 * $arrPosts = array(
 	 *					array( POST_TYPE_1 => array(....),
@@ -32,17 +31,14 @@ class WPCPN_Post_Selector_Model {
 	 *				);
 	 * @since     1.0.0
 	 */
-	public static function getPostsFromBlog($blog_id = null, $ajaxcall = false, $restore_current_blog = true) {
+	public static function getPostsFromBlog($blog_id, $post_types = null) {
 		$arrPosts = array();
-		if ( $ajaxcall && is_null($blog_id) )
-			$blog_id   = intval($_GET['blog_id']);
 
 		switch_to_blog( $blog_id );
 
-		$post_types = get_post_types( array( 'public' => true ) );
-		unset($post_types['attachment']);
-		$post_types = apply_filters('wpcpn_set_post_types', $post_types);
-
+		if ( ! is_array( $post_types ) ) {
+			$post_types = array('post');
+		}
 
 		foreach( $post_types as $post_type ) {
 
@@ -59,10 +55,6 @@ class WPCPN_Post_Selector_Model {
 		}
 
 		restore_current_blog();
-		if ($ajaxcall) {
-			echo json_encode($arrPosts);
-			die();
-		}
 
 		return $arrPosts;
 
@@ -105,7 +97,6 @@ class WPCPN_Post_Selector_Model {
 				$pieces = explode('-', $blogPost);
 				$arrPosts['posts'][] = array('blog_id' => (int) $pieces[0],'post_id' => (int) $pieces[1]);
 
-				//Se tiver alguma solicitação pendente deste post, atualize o status para publicado
 				//If we have pending requests for this post, we need to update it status
 				if ( ! WPCPN_Requests::get_request($pieces[0], $pieces[1]) ) {
 					WPCPN_Requests::insert_request($pieces[0], $pieces[1], __('Published on the main site by the super admin.', 'wpcpn'));
@@ -123,8 +114,8 @@ class WPCPN_Post_Selector_Model {
 		//Clear Cache
 		self::clearCache($group, $section);
 
-		do_action("wpcpn_posts_list_{$group}_{$section}");
-		do_action("wpcpn_save_post_list", $group, $section);
+		do_action("wpcpn_save_posts_list_{$group}_{$section}");
+		do_action("wpcpn_save_posts_list", $group, $section);
 
 		die();
 	}
