@@ -1,10 +1,6 @@
 <?php
 	$post_count = 0;
 	foreach($blog_posts as $post_type => $_posts ) :
-		if (  isset($section['post_types']) &&  is_array($section['post_types']) &&
-					 ! in_array($post_type, $section['post_types']) )
-					continue;
-
 			//If we have restrictions, we need switch_to_blog
 			if (isset($section['restrictions']) )
 				switch_to_blog($blog_id);
@@ -21,8 +17,6 @@
 				} else {
 					$post_count++;
 				}
-
-
 
 				$uid =  $blog_id . '-' . $post->ID;
 
