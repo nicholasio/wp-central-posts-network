@@ -37,7 +37,6 @@ require_once( plugin_dir_path( __FILE__ ) . 'admin/includes/functions.php');
 require_once( plugin_dir_path( __FILE__ ) . 'admin/models/class-wpcpn-post-selector-model.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'admin/models/class-wpcpn-requests.php');
 require_once( plugin_dir_path( __FILE__ ) . 'admin/class-post-selector.php');
-require_once( plugin_dir_path( __FILE__ ) . 'includes/network_queries.php' );
 
 /*----------------------------------------------------------------------------*
  * Public-Facing Functionality
@@ -60,9 +59,6 @@ add_action( 'after_setup_theme', array( 'WPCPN', 'get_instance' ) );
  * Dashboard and Administrative Functionality
  *----------------------------------------------------------------------------*/
 
-/**
- * The administrative panel must only be show for super admin users running on the main site
- */
 if ( is_admin() ) {
 	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-wpcpn-admin.php' );
 	add_action( 'after_setup_theme', array( 'WPCPN_Admin', 'get_instance' ) );
