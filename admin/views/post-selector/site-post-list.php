@@ -1,4 +1,5 @@
 <?php
+	$post_count = 0;
 	foreach($blog_posts as $post_type => $_posts ) :
 		if (  isset($section['post_types']) &&  is_array($section['post_types']) &&
 					 ! in_array($post_type, $section['post_types']) )
@@ -13,8 +14,13 @@
 				 * Processa as restrições, se algo não atender as restrições o post não é listado para essa section.
 				 */
 				if ( isset($section['restrictions']) &&
-					 ! WPCPN_Post_Selector_Model::processRestrictions($blog_id, $post, $section['restrictions']) )
+					 ! WPCPN_Post_Selector_Model::processRestrictions($blog_id, $post, $section['restrictions']) ) {
 					continue;
+				} else {
+					$post_count++;
+				}
+
+
 
 				$uid =  $blog_id . '-' . $post->ID;
 
@@ -43,3 +49,7 @@
 			restore_current_blog();
 	?>
 <?php endforeach; ?>
+
+<?php if ( $post_count == 0 ) : ?>
+	<?php echo '<li class="wpcpn-no-posts-found">' . __('No posts has met the restrictions', 'wpcpn') . '</li>'; ?>
+<?php endif; ?>
