@@ -91,8 +91,8 @@ Class WP_List_Requests extends WP_List_Table {
 		$this->items = $this->get_data($per_page, $current_page);
 
 		$this->set_pagination_args( array(
-		    'total_items' => $total_items,                  //WE have to calculate the total number of items
-		    'per_page'    => $per_page                     //WE have to determine how many items to show on a page
+		    'total_items' => $total_items,
+		    'per_page'    => $per_page
 		) );
 	}
 

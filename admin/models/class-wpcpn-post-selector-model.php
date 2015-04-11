@@ -10,8 +10,9 @@
 class WPCPN_Post_Selector_Model {
 
 	const META_KEY = 'wpcpn_posts_list_';
+
 	/**
-	 * Id's dos sites instalados na rede
+	 * Sites Id's
 	 *
 	 * @since    1.0.0
 	 *
@@ -20,53 +21,8 @@ class WPCPN_Post_Selector_Model {
 	public $blogs_ids;
 
 	/**
-	 * Contém todos os posts de todos os blogs indexados pelo id do blog e pelo post_type
-	 *
-	 * @since    1.0.0
-	 *
-	 * @var      array
-	 */
-	public $arrPosts;
-
-	/**
-	 * Popula o array $arrPosts
-	 * It's not used anymore
-	 *
-	 * $arrPosts = array( BLOG_ID_1 =>
-	 *						array( POST_TYPE_1 => array(....),
-	 * 							... ,
-	 *					   		POST_TYPE_N => array( .... )
-	 *						),
-	 *						BLOG_ID_N => ....
-	 *				);
-	 * @since     1.0.0
-	 * @deprecated
-	 */
-	public function getAllPostsFromBlogs() {
-		$this->blogs_ids 	= WPCPN::get_blog_ids();
-		//Não faça o cache dos posts resgatados
-		wp_suspend_cache_addition();
-
-		$arrPosts = array();
-
-		foreach( $this->blogs_ids as $blog_id ) {
-			if ( $blog_id == 1 ) continue; //Pula o site principal
-
-			$arrPosts[$blog_id]  = array();
-
-			//Não é uma requisição ajax e não restaure o blog corrente
-			$arrPosts[$blog_id]  = self::getPostsFromBlog($blog_id, false, false);
-		}
-
-		//Restaura para o site principal
-		switch_to_blog(1);
-
-		return $arrPosts;
-	}
-
-	/**
-	 * Retorna os posts de um determinado blog,
-	 * atende tanto a uma chamada normal, como uma requisição ajax
+	 * Return the posts from a given blog
+	 * This method can be called from ajax or a normal call
 	 *
 	 * $arrPosts = array(
 	 *					array( POST_TYPE_1 => array(....),
@@ -113,8 +69,8 @@ class WPCPN_Post_Selector_Model {
 	}
 
 	/**
-	 * Salva uma lista de posts (na ordem especificada pelo usuário)
-	 * atende somente a chamadas via ajax (WordPress ajax handler: wpcpn_save_posts_list)
+	 * Save the posts list (in the order specefied by the user)
+	 * (WordPress ajax handler: wpcpn_save_posts_list)
 	 *
 	 * @since     1.0.0
 	 */
@@ -134,7 +90,7 @@ class WPCPN_Post_Selector_Model {
 		$old_posts = get_option($meta_key);
 
 
-		//Seta todos os posts já salvos que tenham solicitações como Aprovados
+		//Set old posts with the approve status (they aren't published anymore)
 		foreach ($old_posts['posts'] as $blog_id =>  $_old_posts) {
 			foreach ($_old_posts as $blog_post) {
 				WPCPN_Requests::approve( $blog_id, $blog_post );
@@ -150,6 +106,7 @@ class WPCPN_Post_Selector_Model {
 				$arrPosts['posts'][] = array('blog_id' => (int) $pieces[0],'post_id' => (int) $pieces[1]);
 
 				//Se tiver alguma solicitação pendente deste post, atualize o status para publicado
+				//If we have pending requests for this post, we need to update it status
 				if ( ! WPCPN_Requests::get_request($pieces[0], $pieces[1]) ) {
 					WPCPN_Requests::insert_request($pieces[0], $pieces[1], __('Published on the main site by the super admin.', 'wpcpn'));
 				}
@@ -188,7 +145,7 @@ class WPCPN_Post_Selector_Model {
 	}
 
 	/*
-	 *	Retorna a lista de posts cadastrado para um dado group/seção
+	 *	Return the posts list from a group and section
 	 */
 	public static function getPostsList( $group, $sectionSlug ) {
 		$postLists =  get_option(WPCPN_Post_Selector_Model::META_KEY . $group . '_' . $sectionSlug);

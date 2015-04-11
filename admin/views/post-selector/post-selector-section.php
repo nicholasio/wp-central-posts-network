@@ -48,7 +48,6 @@
 						<input class="wpcpn-search" type="text" placeholder="<?php _e('Search', 'wpcpn'); ?>">
 					</div>
 					<div class="wpcpn-area">
-						<!--<p><?php _e('Posts from the selected site', 'wpcpn'); ?></p>-->
 						<ul class="connectedSortable sortable wpcpn-posts-selected">
 							<?php
 								if ( is_array($posts_selected['posts']) ) :
@@ -74,8 +73,8 @@
 			</td>
 			<tr>
 				<td colspan="2" >
-						<input class="button-primary wpcpn-save-post-list" type="submit" name="" value="<?php _e( 'Save', 'wpcpn' ); ?>" />
-						<span class="wpcpn-ajax-loader wpcpn-ajax-loader-btn"></span>
+					<input class="button-primary wpcpn-save-post-list" type="submit" name="" value="<?php _e( 'Save', 'wpcpn' ); ?>" />
+					<span class="wpcpn-ajax-loader wpcpn-ajax-loader-btn"></span>
 				</td>
 			</tr>
 		</tr>
