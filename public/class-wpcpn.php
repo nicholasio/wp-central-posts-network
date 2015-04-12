@@ -57,6 +57,7 @@ class WPCPN {
 	private function __construct() {
 		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
+		add_action( 'init', array( $this, 'load_plugin_textdomain') );
 
 		self::$cache_config = apply_filters( 'wpcpn_cache_config', false );
 	}
@@ -214,7 +215,6 @@ class WPCPN {
 
 		$domain = $this->plugin_slug;
 		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
-
 		load_textdomain( $domain, trailingslashit( WP_LANG_DIR ) . $domain . '/' . $domain . '-' . $locale . '.mo' );
 		load_plugin_textdomain( $domain, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
 

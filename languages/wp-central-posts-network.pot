@@ -1,0 +1,308 @@
+# Copyright (C) 2015 WordPress Central Posts Network
+# This file is distributed under the same license as the WordPress Central Posts Network package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress Central Posts Network 1.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/wp-central-posts-"
+"network\n"
+"POT-Creation-Date: 2015-04-12 17:28:08+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-04-12 14:50-0300\n"
+"Last-Translator: Nícholas André <nicholas@iotecnologia.com.br>\n"
+"Language-Team: LANGUAGE <nicholas@iotecnologia.com.br>\n"
+"X-Generator: Poedit 1.5.4\n"
+"Language: pt_BR\n"
+
+#: admin/class-post-selector.php:39 admin/class-post-selector.php:40
+msgid "Network Posts Selector"
+msgstr "Seletor de Posts da Rede"
+
+#: admin/class-post-selector.php:53
+msgid "Featured Requests"
+msgstr "Solicitação de Destaque"
+
+#: admin/class-post-selector.php:54
+msgid "Requests"
+msgstr "Solicitações"
+
+#: admin/class-post-selector.php:63
+msgid "Older Publications"
+msgstr "Publicações Antigas"
+
+#: admin/class-post-selector.php:64
+msgid "History"
+msgstr "Histórico"
+
+#: admin/class-post-selector.php:132
+msgid "No Posts found for this site"
+msgstr "Nenhum Post encontrado para este site"
+
+#: admin/class-wpcpn-admin.php:81
+msgid "Request featured in home"
+msgstr "Solicitar Destaque na home"
+
+#: admin/class-wpcpn-admin.php:93 admin/class-wpcpn-admin.php:141
+msgid "Featured Request Status"
+msgstr "Status da solicitação de destaque"
+
+#: admin/class-wpcpn-admin.php:115
+msgid "Unsolicited"
+msgstr "Não Solicitado"
+
+#: admin/class-wpcpn-admin.php:119
+msgid "Waiting review"
+msgstr "Aguardando revisão"
+
+#: admin/class-wpcpn-admin.php:119 admin/class-wpcpn-admin.php:121
+#: admin/class-wpcpn-admin.php:129
+msgid "Requested in"
+msgstr "Solicitado em"
+
+#: admin/class-wpcpn-admin.php:121 admin/class-wpcpn-admin.php:123
+#: admin/class-wpcpn-admin.php:125 admin/views/WP_List_Requests.php:141
+msgid "Approved"
+msgstr "Aprovado"
+
+#: admin/class-wpcpn-admin.php:121
+msgid "Approved, but not published"
+msgstr "Aprovado, mas não publicado"
+
+#: admin/class-wpcpn-admin.php:126 admin/views/WP_List_Requests.php:133
+msgid "Published"
+msgstr "Publicado"
+
+#: admin/class-wpcpn-admin.php:127
+msgid "Approved and Published"
+msgstr "Aprovado e Publicado"
+
+#: admin/class-wpcpn-admin.php:127
+msgid "Published in"
+msgstr "Publicado em"
+
+#: admin/class-wpcpn-admin.php:129 admin/views/WP_List_Requests.php:136
+msgid "Rejected"
+msgstr "Rejeitado"
+
+#: admin/class-wpcpn-admin.php:157
+msgid "You are requesting highlight for this post in the main site"
+msgstr "Você está solicitando destaque para este post no site principal"
+
+#: admin/class-wpcpn-admin.php:159
+msgid ""
+"Please describe the reasons for your request. This request will not "
+"automatically put this post on the main site, it\n"
+"\t\t\t\t\t\t must be approved by a super administrator."
+msgstr ""
+"Por favor, descreva os motivos para a sua solicitação. Essa solicitação não "
+"vai colocar seu post automaticamente no site principal, ele\n"
+"\t\t\t\t\t\t deve ser aprovado por um super admin."
+
+#: admin/class-wpcpn-admin.php:161
+msgid "Be aware that your post can be edited before posting in the main site."
+msgstr ""
+"Esteja ciente que seu post pode ser editado antes de ir para o site "
+"principal."
+
+#: admin/class-wpcpn-admin.php:162
+msgid "Reasons"
+msgstr "Motivos"
+
+#: admin/class-wpcpn-admin.php:202
+msgid "Informations about your request"
+msgstr "Informações sobre a sua solicitação"
+
+#: admin/class-wpcpn-admin.php:203
+msgid "Send"
+msgstr "Enviar"
+
+#: admin/class-wpcpn-admin.php:204
+msgid "Close"
+msgstr "Fechar"
+
+#: admin/class-wpcpn-admin.php:205
+msgid "Duplicated Request"
+msgstr "Solicitação duplicada"
+
+#: admin/class-wpcpn-admin.php:206
+msgid "Successfully sent request"
+msgstr "Solicitação enviada com sucesso"
+
+#: admin/class-wpcpn-admin.php:207
+msgid "It happened a problem with your request"
+msgstr "Aconteceu algum problema com a sua solicitação"
+
+#: admin/class-wpcpn-admin.php:225
+msgid "Settings"
+msgstr "Configurações"
+
+#: admin/models/class-wpcpn-post-selector-model.php:102
+msgid "Published on the main site by the super admin."
+msgstr "Publicado no site principal pleo super admin."
+
+#: admin/views/WP_List_Requests.php:20
+msgid "ID"
+msgstr "ID"
+
+#: admin/views/WP_List_Requests.php:21
+msgid "Site"
+msgstr "Site"
+
+#: admin/views/WP_List_Requests.php:22
+msgid "Post"
+msgstr "Post"
+
+#: admin/views/WP_List_Requests.php:23
+msgid "Message"
+msgstr "Mensagem"
+
+#: admin/views/WP_List_Requests.php:24
+msgid "Request Date"
+msgstr "Data da solicitação"
+
+#: admin/views/WP_List_Requests.php:25
+msgid "Published Date"
+msgstr "Data de publicação"
+
+#: admin/views/WP_List_Requests.php:27
+msgid "Status"
+msgstr "Status"
+
+#: admin/views/WP_List_Requests.php:28
+msgid "Actions"
+msgstr "Ações"
+
+#: admin/views/WP_List_Requests.php:127
+msgid "View Site"
+msgstr "Ver Site"
+
+#: admin/views/WP_List_Requests.php:127
+msgid "View Panel"
+msgstr "Ver Painel"
+
+#: admin/views/WP_List_Requests.php:138
+msgid "Waiting Review"
+msgstr "Aguardando Revisão"
+
+#: admin/views/WP_List_Requests.php:147
+msgid "Edit Post"
+msgstr "Editar Post"
+
+#: admin/views/WP_List_Requests.php:147
+msgid "View Post"
+msgstr "Ver Post"
+
+#: admin/views/WP_List_Requests.php:153
+msgid "Approve"
+msgstr "Aprovar"
+
+#: admin/views/WP_List_Requests.php:154
+msgid "Reject"
+msgstr "Rejeitar"
+
+#: admin/views/WP_List_Requests.php:155
+msgid "Waiting"
+msgstr "Aguardando"
+
+#: admin/views/WP_List_Requests.php:162
+msgid "No Actions"
+msgstr "Sem ações"
+
+#: admin/views/admin-old-requests.php:5
+msgid "See all the posts that were published in the main site"
+msgstr "Ver todos os posts que foram publicadas no site principal"
+
+#: admin/views/admin-requests.php:19
+msgid "In the table below you can see all the requests for posts."
+msgstr "Na tabela abaixo você consegue visualizar todas as solicitações"
+
+#: admin/views/admin-requests.php:20
+msgid ""
+"Note that in approving a request it will not automatically go to the main "
+"page, you must associate it to one or more post section in the post selector "
+"menu"
+msgstr ""
+"Note que aprovando uma solicitação não vai colocar o post automaticamente no "
+"site principal, você deve associá-lo a alguma seção."
+
+#: admin/views/admin-requests.php:21
+msgid "Status Legend"
+msgstr "Legenda dos Status"
+
+#: admin/views/admin-requests.php:23
+msgid "Waiting Review - Waiting for the super admin review the request"
+msgstr "Aguardando revisão - Aguardando o super admin revisar essa solicitação"
+
+#: admin/views/admin-requests.php:24
+msgid "Approved - Approved, but not published"
+msgstr "Aprovado - Aprovado, mas não publicado"
+
+#: admin/views/admin-requests.php:25
+msgid "Published - Published"
+msgstr "Publicado - Publicado"
+
+#: admin/views/admin-requests.php:26
+msgid "Rejected - Rejected by the super admin"
+msgstr "Rejeitado - Rejeitado pelo super admin"
+
+#: admin/views/admin-requests.php:28
+msgid "Last Requests"
+msgstr "Últimas solicitações"
+
+#: admin/views/post-selector/admin.php:14
+msgid "Define which posts will be displayed in each section."
+msgstr "Defina quais posts serão exibidos em cada seção"
+
+#: admin/views/post-selector/admin.php:45
+msgid "This post cannot be added to this section"
+msgstr "Este Post não pode ser adicionado a essa seção"
+
+#: admin/views/post-selector/post-selector-section.php:11
+msgid "Section: %s"
+msgstr "Seção: %s"
+
+#: admin/views/post-selector/post-selector-section.php:12
+msgid "This section supports up to %s posts."
+msgstr "Essa seção suporta até %s posts"
+
+#: admin/views/post-selector/post-selector-section.php:20
+msgid "Choose a site"
+msgstr "Escolha um site"
+
+#: admin/views/post-selector/post-selector-section.php:35
+#: admin/views/post-selector/post-selector-section.php:48
+msgid "Search"
+msgstr "Procurar"
+
+#: admin/views/post-selector/post-selector-section.php:76
+msgid "Save"
+msgstr "Salvar"
+
+#: admin/views/post-selector/site-post-list.php:50
+msgid "No posts has met the restrictions"
+msgstr "Nenhum post atendeu as restrições"
+
+#. Plugin Name of the plugin/theme
+msgid "WordPress Central Posts Network"
+msgstr "WordPress Central Posts Network"
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/nicholasio/wp-central-posts-network"
+msgstr "https://github.com/nicholasio/wp-central-posts-network"
+
+#. Description of the plugin/theme
+msgid ""
+"A Plugin that let you choose any posts on any site in the network to display "
+"on the main site."
+msgstr ""
+"Um plugin que permite você escolher qualquer post de qualquer site da rede "
+"para exibir no site principal."
+
+#. Author of the plugin/theme
+msgid "Nícholas André"
+msgstr "Nícholas André"
+
+#. Author URI of the plugin/theme
+msgid "http://nicholasandre.com.br"
+msgstr "http://nicholasandre.com.br"
