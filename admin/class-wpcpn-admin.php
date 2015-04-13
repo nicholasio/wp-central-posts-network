@@ -11,7 +11,16 @@
 
 class WPCPN_Admin {
 
-	use WPCPN_Singleton;
+	/**
+	 * Instance of this class.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @var      object
+	 */
+	protected static $instance = null;
+
+
 
 	const NONCE = 'wpcpn_nonce_form';
 
@@ -67,6 +76,22 @@ class WPCPN_Admin {
 		if ( WPCPN_IS_MAIN_SITE && current_user_can('manage_network') ) {
 			$this->post_selector = new WPCPN_Post_Selector();
 		}
+	}
+
+	/**
+	 * Return an instance of theclass.
+	 *
+	 * @since     1.0.0
+	 *
+	 * @return    object    A single instance of the class.
+	 */
+	public static function get_instance() {
+		// If the single instance hasn't been set, set it now.
+		if ( null == self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
 	}
 
 	/**

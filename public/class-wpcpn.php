@@ -15,7 +15,15 @@
  * @author  Nícholas André <nicholas@iotecnologia.com.br>
  */
 class WPCPN {
-	use WPCPN_Singleton;
+
+	/**
+	 * Instance of this class.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @var      object
+	 */
+	protected static $instance = null;
 
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
@@ -60,6 +68,22 @@ class WPCPN {
 		add_action( 'init', array( $this, 'load_plugin_textdomain') );
 
 		self::$cache_config = apply_filters( 'wpcpn_cache_config', false );
+	}
+
+	/**
+	 * Return an instance of theclass.
+	 *
+	 * @since     1.0.0
+	 *
+	 * @return    object    A single instance of the class.
+	 */
+	public static function get_instance() {
+		// If the single instance hasn't been set, set it now.
+		if ( null == self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
 	}
 
 	/**
