@@ -31,7 +31,6 @@ define('WPCPN_CAN_ADD_POST', 1);
 define('WPCPN_CANT_ADD_POST', 0);
 define('WPCPN_IS_MAIN_SITE', get_current_blog_id() == 1 );
 
-require_once( plugin_dir_path( __FILE__ ) . 'includes/trait-singleton.php');
 require_once( plugin_dir_path( __FILE__ ) . 'includes/WPCPN_Fragment_Cache.php');
 require_once( plugin_dir_path( __FILE__ ) . 'admin/includes/functions.php');
 require_once( plugin_dir_path( __FILE__ ) . 'admin/models/class-wpcpn-post-selector-model.php' );
