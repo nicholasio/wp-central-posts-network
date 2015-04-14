@@ -203,7 +203,7 @@
 						if ( canAdd ) {
 							this.addItem($o_li);
 						} else {
-							alert("Limite máximo de posts atingido!");
+							alert("Maximum number of posts exceded!");
 						}
 					}
 
