@@ -28,7 +28,7 @@ e.g.
 
 1. Download the file wp-central-posts-network.zip;
 2. Unzip the file on your computer;
-3. Upload folder post-useful, you just unzip to `/wp-content/plugins/` directory;
+3. Upload folder wp-central-posts-network, you just unzip to `/wp-content/plugins/` directory;
 4. Activate the plugin on the `Network` through the `Plugins` menu of `Network Panel` in WordPress;
 5. Be happy.
 
