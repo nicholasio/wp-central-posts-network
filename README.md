@@ -37,8 +37,9 @@ function mysite_wpcpn_posts_section() {
                'description'        => 'News section', //Descriptions
                'max_posts'          => 4, //Max Posts in this sections
                //sites => array(2, 3, 4) //'all' or specify the blogs_id that you canpull posts
-               'sites'              => 'all',  
-               'include_main_site'  => false //should posts of main site be included?
+               'sites'              => 'all',
+               //should posts of main site be included?
+               'include_main_site'  => false 
             ),
             'old-news' => array(
                'name'               => 'Old News',
@@ -79,7 +80,7 @@ if ( function_exists('wpcpn_show_posts_section')) {
                           'template_slug' => 'partials/content', 
                           'template_name' => 'featured' 
                       ),
-                      array(
+                      array( //Optional parameters
                           'limit'         => 3 //Show only 3 posts
                           'offset'        => 1 //Bypass the first post
                       ) 
@@ -117,12 +118,27 @@ function mysite_wpcpn_disable_featured_requests( $status ) {
 }
 ```
 #### Advanced Use ####
+#####Post Types #####
+You can specify which post_types the plugin should return when a particular site is chosen in the selector posts.
+Eg:
+```php
+'old-news' => array(
+   'name'               => 'Old News',
+   'description'        => 'Old News Posts',
+   'max_posts'          => 3,
+   'sites'              => 'all', 
+   'include_main_site'  => false,
+   'post_types'         => array( 2 => array('banner') )
+)
+```
+
 #####Restrictions #####
 It's possible to define aditional restrictions to filter the posts of a site that can be selected for a given section.
 At the moment we have one native restriction, but you can define your own custom restriction.
+In the example above whe are telling that the plugin must return only posts of banner post_type for site with id = 2. All the others sites by default will retrieve only posts of the `post` post_type.
 Eg:
+
 ```php
-...
 'old-news' => array(
    'name'               => 'Old News',
    'description'        => 'Old News Posts',
@@ -137,11 +153,12 @@ Eg:
                            'has_banner' => array( 'custom_params' ) //A custom restriction
                     ),
 ),
-...
 ```
+
 The native restriction `taxonomy` receives a `taxonomy_slug`and `term_slug` and check if the post has the `term_slug` in the `taxonomy_slug`. In the example we are loading only the posts that has the `news` category, so if the site has posts without the `news` category, they wont be selectable for that section.
 
 To use a custom restriction, you must define it in the sections config array and create a filter hook with the tag: ` wpcpn_restriction_{your_custom_unique_restriction}` Eg:
+
 ```php
 add_filter('wpcpn_restriction_has_banner', 'mysite_wpcpn_has_banner', 1, 4);
 function mysite_wpcpn_has_banner($pass, $post, $blog_id, $restrictions_params) {
