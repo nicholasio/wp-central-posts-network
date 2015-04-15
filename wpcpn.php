@@ -12,7 +12,7 @@
  * Plugin Name: 	WordPress Central Posts Network
  * Plugin URI: 		https://github.com/nicholasio/wp-central-posts-network
  * Description: 	A Plugin that let you choose any posts on any site in the network to display on the main site.
- * Version: 		1.0.0
+ * Version: 		1.0.1
  * Author: 		Nícholas André
  * Author URI:		http://nicholasandre.com.br
  * Text Domain:		wpcpn
@@ -26,7 +26,7 @@
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
-
+phpinfo();
 define('WPCPN_CAN_ADD_POST', 1);
 define('WPCPN_CANT_ADD_POST', 0);
 define('WPCPN_IS_MAIN_SITE', get_current_blog_id() == 1 );
