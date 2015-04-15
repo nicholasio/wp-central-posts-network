@@ -120,7 +120,7 @@ function wpcpn_show_posts_section( $group_name, $section_name, Array $template, 
 
 function wpcpn_show_posts( $posts, Array $template ) {
 	$slug	= $template['template_slug'];
-	$name	= isset($template['template_name']) ? $template['template_name'] : '';
+	$name	= isset($template['template_name']) && ! empty($template['template_name']) ?  '-' . $template['template_name'] : '';
 
 	if ( $posts && is_array($posts) ) {
 		global $post;
@@ -129,7 +129,7 @@ function wpcpn_show_posts( $posts, Array $template ) {
 	        $post = get_post( $wpcpn_post['post_id'] );
 	        setup_postdata($post);
 
-	        include( locate_template($slug . '-' . $name . '.php') );
+	        include( locate_template($slug . $name . '.php') );
 
 	        wp_reset_postdata();
 	        restore_current_blog();
