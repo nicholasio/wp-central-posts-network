@@ -52,6 +52,8 @@
 						include('post-selector-section.php');
 					}
 				echo '</div>';
+			} else {
+				echo '<p>' . __('No sections defined. Please define the groups and sections in the wpcpn_posts_section filter.', 'wpcpn') . '</p>';
 			}
 		?>
 
