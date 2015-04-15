@@ -16,8 +16,7 @@ This plugin adds a UI on the main site admin panel of a Network that let you cho
 This plugin only works with multisite and must be network activated
 
 = How it works and How to Use =
-
-See the README.md in our [GitHub](https://github.com/nicholasio/wp-central-posts-network)
+To use the plugin you need do write some code in a hook filter. Please read our README.md file in our GitHub](https://github.com/nicholasio/wp-central-posts-network/blob/master/README.md)
 
 == Installation ==
 
