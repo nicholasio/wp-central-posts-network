@@ -26,7 +26,7 @@
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
-phpinfo();
+
 define('WPCPN_CAN_ADD_POST', 1);
 define('WPCPN_CANT_ADD_POST', 0);
 define('WPCPN_IS_MAIN_SITE', get_current_blog_id() == 1 );
