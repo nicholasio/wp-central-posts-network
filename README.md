@@ -32,22 +32,22 @@ function mysite_wpcpn_posts_section() {
 			//the name of the group
 			'name'  => 'Posts Highlights', 
 			'sections'  => array( //the sections arrays holds all sections definitions
-						'news' => array( //the key is the slug of the sections
-							 'name'               => 'News', //The Name
-							 'description'        => 'News section', //Descriptions
-							 'max_posts'          => 4, //Max Posts in this sections
-							 //sites => array(2, 3, 4) //'all' or specify the blogs_id that you canpull posts
-							 'sites'              => 'all',
-							 //should posts of main site be included?
-							 'include_main_site'  => false 
-						),
-						'old-news' => array(
-							 'name'               => 'Old News',
-							 'description'        => 'Old News Posts',
-							 'max_posts'          => 3,
-							 'sites'              => 'all', 
-							 'include_main_site'  => false
-						),
+					'news' => array( //the key is the slug of the sections
+						 'name'               => 'News', //The Name
+						 'description'        => 'News section', //Descriptions
+						 'max_posts'          => 4, //Max Posts in this sections
+						 //sites => array(2, 3, 4) //'all' or specify the blogs_id that you canpull posts
+						 'sites'              => 'all',
+						 //should posts of main site be included?
+						 'include_main_site'  => false 
+					),
+					'old-news' => array(
+						 'name'               => 'Old News',
+						 'description'        => 'Old News Posts',
+						 'max_posts'          => 3,
+						 'sites'              => 'all', 
+						 'include_main_site'  => false
+					),
 
 				 ), //sections
 		), //homepage_highliths
@@ -74,16 +74,16 @@ To display posts on the main site you need to call a function named `wpcpn_show_
 ```php
 if ( function_exists('wpcpn_show_posts_section')) {
 			wpcpn_show_posts_section(
-											'homepage_highlights', //group slug
-											'news',  //sections slug
-											array(  //will load the file partials/content-featured.php
-													'template_slug' => 'partials/content', 
-													'template_name' => 'featured' 
-											),
-											array( //Optional parameters
-													'limit'         => 3 //Show only 3 posts
-													'offset'        => 1 //Bypass the first post
-											) 
+				'homepage_highlights', //group slug
+				'news',  //sections slug
+				array(  //will load the file partials/content-featured.php
+						'template_slug' => 'partials/content', 
+						'template_name' => 'featured' 
+				),
+				array( //Optional parameters
+						'limit'         => 3 //Show only 3 posts
+						'offset'        => 1 //Bypass the first post
+				) 
 			);
 	}
 ```
@@ -92,18 +92,18 @@ Of course you need to define the file `partials/content-featured.php`, you can d
 ```html
 <article>
 	<figure>
-			<a href="<?php the_permalink(); ?>">            
-				<?php the_post_thumbnail(); ?>
-			</a>
+		<a href="<?php the_permalink(); ?>">            
+			<?php the_post_thumbnail(); ?>
+		</a>
 	</figure>
 	<section>
-			<h5>
-					<small><?php echo get_the_time('j F, Y'); ?></small>
-			</h5>
-			<a href="<?php the_permalink(); ?>">
-					<h4><?php the_title(); ?></h4>            
-			</a>
-			<p><?php the_excerpt() ?></p>
+		<h5>
+			<small><?php echo get_the_time('j F, Y'); ?></small>
+		</h5>
+		<a href="<?php the_permalink(); ?>">
+			<h4><?php the_title(); ?></h4>            
+		</a>
+		<p><?php the_excerpt() ?></p>
 	</section>
 </article>
 ```
@@ -146,12 +146,12 @@ Eg:
 	 'sites'              => 'all', 
 	 'include_main_site'  => false,
 	 'restrictions'       => array( 
-													 'taxonomy' => array(
-															'taxonomy_slug' => 'category',
-															'term_slug'     => 'news'
-													 ),
-													 'has_banner' => array( 'custom_params' ) //A custom restriction
-										),
+				 'taxonomy' => array(
+						'taxonomy_slug' => 'category',
+						'term_slug'     => 'news'
+				 ),
+				 'has_banner' => array( 'custom_params' ) //A custom restriction
+	),
 ),
 ```
 
@@ -181,20 +181,20 @@ If you want to perform an action when the user try do add a post to a given sect
 ```php
 add_action('wp_ajax_wpcpn_before_select_homepage_highlights_news', 'mysite_wpcpn_banner_on_select');
 function mysite_wpcpn_banner_on_select() {
-			$blog_id = $_GET['blog_id'];
-			$post_id = $_GET['post_id'];
+	$blog_id = $_GET['blog_id'];
+	$post_id = $_GET['post_id'];
 
-			//with ajax we need to switch_to_blog
-			switch_to_blog($blog_id);
-			$bannerimg = get_post_meta($post_id, '_inner_banner_image');
-			restore_current_blog();
-			
-			if ( $bannerimg )
-				 echo 1; //can add
-			else
-				 echo 0; //cant't add
-			
-			die(); //Good practice finish ajax calls with die
+	//with ajax we need to switch_to_blog
+	switch_to_blog($blog_id);
+	$bannerimg = get_post_meta($post_id, '_inner_banner_image');
+	restore_current_blog();
+	
+	if ( $bannerimg )
+		 echo 1; //can add
+	else
+		 echo 0; //cant't add
+	
+	die(); //Good practice finish ajax calls with die
 }
 ```
 If the ajax call echoes 1, then the post can be added, if not, it can't. 
