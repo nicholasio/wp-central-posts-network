@@ -73,19 +73,19 @@ function mysite_wpcpn_posts_section() {
 To display posts on the main site you need to call a function named `wpcpn_show_posts_section` and pass the correct parameters, you should use this function on the theme used in the main site. If you have two sites with the same same theme, you can check if the current site is the main site, or you can create a child theme and use it only on the main site.
 ```php
 if ( function_exists('wpcpn_show_posts_section')) {
-			wpcpn_show_posts_section(
-				'homepage_highlights', //group slug
-				'news',  //sections slug
-				array(  //will load the file partials/content-featured.php
-						'template_slug' => 'partials/content', 
-						'template_name' => 'featured' 
-				),
-				array( //Optional parameters
-						'limit'         => 3 //Show only 3 posts
-						'offset'        => 1 //Bypass the first post
-				) 
-			);
-	}
+	wpcpn_show_posts_section(
+		'homepage_highlights', //group slug
+		'news',  //sections slug
+		array(  //will load the file partials/content-featured.php
+				'template_slug' => 'partials/content', 
+				'template_name' => 'featured' 
+		),
+		array( //Optional parameters
+				'limit'         => 3 //Show only 3 posts
+				'offset'        => 1 //Bypass the first post
+		) 
+	);
+}
 ```
 
 Of course you need to define the file `partials/content-featured.php`, you can define it using regular WordPress functions, you don't need to perform the loop, the plugin already does it for you. 
