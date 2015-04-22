@@ -108,7 +108,7 @@ Of course you need to define the file `partials/content-featured.php`, you can d
 </article>
 ```
 #### Feature Requests ####
-By the default admins of the sites can request that a single post shows up on the main site. This plugins adds a link to the edit.php page (the page that list the posts) called `Request Feadured in Home`. When the user clicks on the link, a pop up will show up and the user must provide a text describring the request.
+By default, admins of the sites can request that a single post shows up on the main site. This plugins adds a link to the edit.php page (the page that list the posts) called `Request Feadured in Home`. When the user clicks on the link, a pop up will show up and the user must provide a text describring the request.
 
 This functionality can be deactivate by using the following code:
 ```php
@@ -120,6 +120,7 @@ function mysite_wpcpn_disable_featured_requests( $status ) {
 #### Advanced Use ####
 #####Post Types #####
 You can specify which post_types the plugin should return when a particular site is chosen in the selector posts.
+In the example above whe are telling that the plugin must return only posts of banner post_type for site with id = 2. All the others sites by default will retrieve only posts of the `post` post_type.
 Eg:
 ```php
 'old-news' => array(
@@ -135,7 +136,7 @@ Eg:
 #####Restrictions #####
 It's possible to define aditional restrictions to filter the posts of a site that can be selected for a given section.
 At the moment we have one native restriction, but you can define your own custom restriction.
-In the example above whe are telling that the plugin must return only posts of banner post_type for site with id = 2. All the others sites by default will retrieve only posts of the `post` post_type.
+
 Eg:
 
 ```php
