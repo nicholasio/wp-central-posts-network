@@ -94,8 +94,6 @@ function wpcpn_show_posts_section( $group_name, $section_name, Array $template, 
 		} else {
 			wpcpn_show_posts($section_posts, $template);
 		}
-	} else {
-		echo '<p>Seção não definida.</p>';
 	}
 }
 
