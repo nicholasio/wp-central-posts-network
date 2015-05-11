@@ -120,7 +120,6 @@ class WPCPN_Post_Selector {
 			} else {
 				$post_types = array('post');
 			}
-
 		}
 
 

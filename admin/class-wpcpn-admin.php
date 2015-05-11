@@ -20,8 +20,6 @@ class WPCPN_Admin {
 	 */
 	protected static $instance = null;
 
-
-
 	const NONCE = 'wpcpn_nonce_form';
 
 	/**
@@ -62,7 +60,6 @@ class WPCPN_Admin {
 		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->plugin_slug . '.php' );
 		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
 
-
 		$status = apply_filters('wpcpn_activate_featured_requests', true );
 
 		if ( get_current_blog_id() != 1 && $status ) {
@@ -73,7 +70,7 @@ class WPCPN_Admin {
 				add_action( 'admin_footer', array($this, 'admin_footer') );
 		}
 
-		if ( WPCPN_IS_MAIN_SITE && current_user_can('manage_network') ) {
+		if ( /*WPCPN_IS_MAIN_SITE && */ current_user_can('manage_network') ) {
 			$this->post_selector = new WPCPN_Post_Selector();
 		}
 	}

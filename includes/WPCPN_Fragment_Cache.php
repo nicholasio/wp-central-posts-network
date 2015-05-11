@@ -24,9 +24,6 @@ class WPCPN_Fragment_Cache {
 	}
 
 	public function output() {
-		/*if ( $this->network_wide && is_multisite() )
-			$output = get_site_transient( self::GROUP . $this->key );
-		else*/
 		$output = get_transient( self::GROUP . $this->key );
 		if ( $output  !== false ) {
 			echo $output;
@@ -40,16 +37,10 @@ class WPCPN_Fragment_Cache {
 	public function store() {
 		$output = ob_get_flush();
 
-		/*if ( $this->network_wide && is_multisite() )
-			set_site_transient( self::GROUP . $this->key, $output, $this->ttl );
-		else*/
-			set_transient( self::GROUP . $this->key, $output, $this->ttl );
+		set_transient( self::GROUP . $this->key, $output, $this->ttl );
 	}
 
 	public function delete() {
-		/*if ( $this->network_wide && is_multisite() )
-			delete_site_transient( self::GROUP . $this->key );
-		else*/
-			delete_transient( self::GROUP . $this->key );
+		delete_transient( self::GROUP . $this->key );
 	}
 }
