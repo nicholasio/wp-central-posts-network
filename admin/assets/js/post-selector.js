@@ -27,7 +27,6 @@
 				 * stays in the section the browser does not trigger mouseenter, so we use mouseover only once
 				 */
 				this.$section.on('mouseover', $.proxy(this.setNameSpace, this ) );
-				this.$section.off('mouseover', $.proxy(this.setNameSpace, this ) );
 				this.$section.on('mouseenter', $.proxy(this.setNameSpace, this ) );
 
 				$('.wpcpn-site-chooser').select2();
@@ -70,6 +69,14 @@
 
 				this.bind();
 				this.liveFilter();
+
+				/*
+				 * We need mouseover event only once, so if the event is a mouseover, we need to
+				 * unbind it
+				 */
+				if ( evt.type == 'mouseover' ) {
+					this.$section.off('mouseover', $.proxy(this.setNameSpace, this ) );
+				}
 
 			},
 
