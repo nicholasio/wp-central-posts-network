@@ -1,7 +1,7 @@
 WP Central Posts Network
 ===========
 
-A WordPress Multisite Plugin that let you choose any posts on any site in the network to display on the main site.
+A WordPress Multisite Plugin that let you choose any posts on any site in the network to display on the main site (or any other site of the network).
 
 ## About ##
 
@@ -16,7 +16,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Description ##
 
-This plugin adds a UI on the main site admin panel of a Network that let you choose posts of any site of your network and associate it with sections that you must define via a hook filter. Then you can show up this sections on the front of your main site via a simple API.
+This plugin adds a UI on the main site (actually, in any site of the network) admin panel of a Network that let you choose posts of any site of your network and associate it with sections that you must define via a hook filter. Then you can show up this sections on the front of your main site via a simple API.
 
 ### How it works ####
 
