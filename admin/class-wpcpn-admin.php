@@ -70,8 +70,15 @@ class WPCPN_Admin {
 				add_action( 'admin_footer', array($this, 'admin_footer') );
 		}
 
-		if ( /*WPCPN_IS_MAIN_SITE && */ current_user_can('manage_network') ) {
-			$this->post_selector = new WPCPN_Post_Selector();
+		if ( current_user_can('manage_network') ) {
+			/**
+			 * Always initializes post_selector on the main site,
+			 * but for others sites only initializes if it has sections defined
+			 */
+			if ( WPCPN_IS_MAIN_SITE || ( !WPCPN_IS_MAIN_SITE &&  is_array( apply_filters('wpcpn_posts_section', null) ) ) ) {
+				$this->post_selector = new WPCPN_Post_Selector();
+			}
+
 		}
 	}
 
