@@ -206,6 +206,11 @@ class WPCPN {
 		flush_rewrite_rules();
 	}
 
+	/**
+	 * Checks if we need to perform a database upgrade
+	 * Runs on init
+	 * @since 1.0.2
+	 */
 	public function upgrade() {
 		if ( get_site_option('wpcpn_db_version') !== self::TABLES_VERSION ) {
 			self::activate( true );

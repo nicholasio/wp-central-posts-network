@@ -14,7 +14,7 @@ class WPCPN_Requests {
 
 
 	/**
-	 * Carrega todas as informações referentes ao Model
+	 * Constructor
 	 *
 	 * @since     1.0.0
 	 */
@@ -23,7 +23,8 @@ class WPCPN_Requests {
 	}
 
 	/**
-	 * Função callback para chamada ajax wpcpn_send_featured_request
+	 * Callback function for ajax call wpcpn_send_featured_request
+	 *
 	 * @see    public/assets/js/admin-public.js
 	 * @param  $_GET['post_id'] ID do post solicitado
 	 * @param  $_GET['blog_id'] ID do blog solicitante
@@ -42,14 +43,15 @@ class WPCPN_Requests {
 		die();
 	}
 
-	public static function insert_request( $blog_id, $post_id, $message ) {
+	public static function insert_request( $blog_id, $post_id, $message) {
 		global $wpdb;
 
 		$count = $wpdb->get_var(
-		 	$wpdb->prepare('SELECT COUNT(ID) FROM ' . self::get_table_name() . ' WHERE blog_id = %d AND post_id = %d' ,
+		 	$wpdb->prepare('SELECT COUNT(ID) FROM ' . self::get_table_name() . ' WHERE blog_id = %d AND post_id = %d AMD orig_blog_id = %d' ,
 		 		array(
 		 			$blog_id,
-		 			$post_id
+		 			$post_id,
+		 			get_current_blog_id()
 		 		)
 		 	)
 		);
@@ -59,11 +61,13 @@ class WPCPN_Requests {
 		} else {
 			$wpdb->insert( self::get_table_name(),
 				array(
+					'orig_blog_id' => get_current_blog_id(),
 					'blog_id' => $blog_id,
 					'post_id' => $post_id,
 					'message' => $message
 				),
 				array(
+					'%d',
 					'%d',
 					'%d',
 					'%s'
@@ -121,11 +125,13 @@ class WPCPN_Requests {
 		$wpdb->update( self::get_table_name(),
 			$values,
 			array(
+				'orig_blog_id' => get_current_blog_id(),
 				'post_id' => $post_id,
 				'blog_id' => $blog_id
 			),
 			$placeholders,
 			array(
+				'%d',
 				'%d',
 				'%d'
 			)
@@ -138,10 +144,11 @@ class WPCPN_Requests {
 
 		global $wpdb;
 		$row = $wpdb->get_row(
-		 	$wpdb->prepare('SELECT * FROM ' . self::get_table_name()  . ' WHERE blog_id = %d AND post_id = %d',
+		 	$wpdb->prepare('SELECT * FROM ' . self::get_table_name()  . ' WHERE blog_id = %d AND post_id = %d AND orig_blog_id = %d',
 		 		array(
 		 			$blog_id,
-		 			$post_id
+		 			$post_id,
+		 			get_current_blog_id()
 		 		)
 		 	)
 		);

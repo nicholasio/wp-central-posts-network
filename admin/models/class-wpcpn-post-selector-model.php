@@ -81,12 +81,9 @@ class WPCPN_Post_Selector_Model {
 		$meta_key = WPCPN_Post_Selector_Model::META_KEY . $group . '_' . $section;
 		$old_posts = get_option($meta_key);
 
-
 		//Set old posts with the approve status (they aren't published anymore)
-		foreach ($old_posts['posts'] as $blog_id =>  $_old_posts) {
-			foreach ($_old_posts as $blog_post) {
-				WPCPN_Requests::approve( $blog_id, $blog_post );
-			}
+		foreach ($old_posts['posts'] as $_old_posts) {
+			WPCPN_Requests::approve( $_old_posts['blog_id'], $_old_posts['post_id'] );
 		}
 
 		$arrPosts = array();
