@@ -111,7 +111,7 @@ Class WP_List_Requests extends WP_List_Table {
 
 				$blogname	= get_option('blogname');
 				$url		= home_url();
-				$admin_url	= $url . '/wp-admin';
+				$admin_url	= admin_url();
 				$post 		= get_post($item->post_id);
 
 				$this->curr_post = new stdClass();

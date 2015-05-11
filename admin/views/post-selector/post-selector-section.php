@@ -1,16 +1,16 @@
 <div class="wpcpm-section wpcpn-namespace-<?php echo $section_slug; ?>"
-		data-namespace="<?php echo $section_slug; ?>"
-		data-max-posts="<?php echo $section['max_posts']; ?>"
-		data-nposts="<?php echo $posts_selected['count']; ?>"
+		data-namespace="<?php echo esc_attr( $section_slug ); ?>"
+		data-max-posts="<?php echo esc_attr( $section['max_posts'] ); ?>"
+		data-nposts="<?php echo esc_attr( $posts_selected['count']) ; ?>"
 		data-on-select="<?php echo $perform_on_select ? '1' : '0'; ?>"
-		data-on-error="<?php echo $on_error; ?>">
+		data-on-error="<?php echo esc_attr( $on_error ); ?>">
 
 	<table class="form-table wpcpn-table">
 		<tr>
 			<td colspan="2">
-				<h4><?php printf(__('Section: %s', 'wpcpn'), $section['name'] );?></h4>
-				<p><?php printf(__('This section supports up to %s posts.', 'wpcpn'), $section['max_posts']); ?></p>
-				<p><?php echo $section['description']; ?></p>
+				<h4><?php printf(__('Section: %s', 'wpcpn'), esc_html( $section['name'] ) );?></h4>
+				<p><?php printf(__('This section supports up to %s posts.', 'wpcpn'), esc_html( $section['max_posts']) ); ?></p>
+				<p><?php echo esc_html( $section['description'] ); ?></p>
 			</td>
 		</tr>
 		<tr>
@@ -55,7 +55,7 @@
 											$post_id = $post['post_id'];
 											$blog_id = $post['blog_id'];
 							?>
-										<li data-blog-id="<?php echo $blog_id; ?>" data-uid="<?php echo $blog_id; ?>-<?php echo $post_id; ?>" class="">
+										<li data-blog-id="<?php echo esc_attr( $blog_id ); ?>" data-uid="<?php echo esc_attr( $blog_id ); ?>-<?php echo esc_attr( $post_id ); ?>" class="">
 											<?php
 												$_post = get_blog_post($blog_id, $post_id);
 												echo $_post->post_title;

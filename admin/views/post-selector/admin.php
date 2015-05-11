@@ -20,7 +20,7 @@
 				$currentGroupTab = '';
 				if ( is_array($sections) ) :
 					if ( isset( $_GET['tab']) )
-						$currentGroupTab = $_GET['tab'];
+						$currentGroupTab = esc_sql( $_GET['tab'] );
 					else
 						$currentGroupTab = key($sections);
 
@@ -38,7 +38,7 @@
 
 				$sites        = WPCPN::get_blog_ids();
 
-				echo '<div id="' . $currentGroupTab . '" class="wpcpn-group">';
+				echo '<div id="' . esc_html( $currentGroupTab ) . '" class="wpcpn-group">';
 					foreach($currentGroup['sections'] as $section_slug => $section) {
 						$perform_on_select = false;
 						$ajaxName = 'wp_ajax_wpcpn_before_select_' . $currentGroupTab . '_' . $section_slug;

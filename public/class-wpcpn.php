@@ -34,6 +34,12 @@ class WPCPN {
 	 */
 	const VERSION = '1.0.2';
 
+	/**
+	 * Version of the database tables for this plugin
+	 * @since 1.0.2
+	 *
+	 * @var string
+	 */
 	const TABLES_VERSION = '1.0.1';
 
 	/**
@@ -65,7 +71,6 @@ class WPCPN {
 	 * @since     1.0.0
 	 */
 	private function __construct() {
-		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 		add_action( 'init', array( $this, 'load_plugin_textdomain') );
 		add_action( 'init', array( $this, 'upgrade') );
@@ -74,7 +79,7 @@ class WPCPN {
 	}
 
 	/**
-	 * Return an instance of theclass.
+	 * Return an instance of the class.
 	 *
 	 * @since     1.0.0
 	 *
@@ -119,7 +124,7 @@ class WPCPN {
 			restore_current_blog();
 
 		} else {
-			echo "<p>You need Multisite Enabled</p>";
+			_e("You need Multisite enabled", "wpcpn");
 			die();
 		}
 	}
