@@ -38,10 +38,6 @@ Class WP_List_Requests extends WP_List_Table {
 
 	public function get_bulk_actions() {
 		$actions = array(
-
-		    'delete'    => 'Delete',
-
-		    'parsing'    => 'Parsen'
 		);
 
 		return $actions;
@@ -50,12 +46,12 @@ Class WP_List_Requests extends WP_List_Table {
 	public function get_data($per_page, $current_page) {
 		global $wpdb;
 		$tableName = WPCPN_Requests::get_table_name();
-		$limit = "LIMIT " . ($current_page-1) * $per_page . "," . $per_page;
+		$limit = esc_sql( "LIMIT " . ($current_page-1) * $per_page . "," . $per_page );
+		$where_orig = esc_sql( 'AND orig_blog_id = ' . get_current_blog_id() );
 
-		$sql = "SELECT * FROM {$tableName} WHERE published = '0000-00-00 00:00:00' OR ( status != 'AP' AND published != '0000-00-00 00:00:00') ORDER BY ID DESC {$limit}";
-
+		$sql = "SELECT * FROM {$tableName} WHERE published = '0000-00-00 00:00:00' OR ( status != 'AP' AND published != '0000-00-00 00:00:00') {$where_orig} ORDER BY ID DESC {$limit}";
 		if ( ! $this->recents )
-			$sql = "SELECT * FROM {$tableName} WHERE published != '0000-00-00 00:00:00' AND status = 'AP' ORDER BY ID DESC {$limit}";
+			$sql = "SELECT * FROM {$tableName} WHERE published != '0000-00-00 00:00:00' AND status = 'AP' {$where_orig} ORDER BY ID DESC {$limit}";
 
 
 		return $wpdb->get_results(
@@ -66,11 +62,12 @@ Class WP_List_Requests extends WP_List_Table {
 	public function get_total_items() {
 		global $wpdb;
 		$tableName = WPCPN_Requests::get_table_name();
+		$where_orig = esc_sql( 'AND orig_blog_id = ' . get_current_blog_id() );
 
-		$sql = "SELECT COUNT(ID) FROM {$tableName} WHERE published = '0000-00-00 00:00:00' OR ( status != 'AP' AND published != '0000-00-00 00:00:00') ORDER BY ID DESC";
+		$sql = "SELECT COUNT(ID) FROM {$tableName} WHERE published = '0000-00-00 00:00:00' OR ( status != 'AP' AND published != '0000-00-00 00:00:00') {$where_orig}  ORDER BY ID DESC";
 
 		if ( ! $this->recents )
-			$sql = "SELECT COUNT(ID) FROM {$tableName} WHERE published != '0000-00-00 00:00:00' AND status = 'AP' ORDER BY ID DESC";
+			$sql = "SELECT COUNT(ID) FROM {$tableName} WHERE published != '0000-00-00 00:00:00' AND status = 'AP' {$where_orig}  ORDER BY ID DESC";
 
 
 		return $wpdb->get_var(
@@ -114,7 +111,7 @@ Class WP_List_Requests extends WP_List_Table {
 
 				$blogname	= get_option('blogname');
 				$url		= home_url();
-				$admin_url	= $url . '/wp-admin';
+				$admin_url	= admin_url();
 				$post 		= get_post($item->post_id);
 
 				$this->curr_post = new stdClass();

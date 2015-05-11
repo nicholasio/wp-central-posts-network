@@ -1,23 +1,4 @@
 <?php
-
-/**
- * Realiza uma simples troca de prefixo, para permitir consultar simples aos posts de outros blogs.
- * @param  int $blog_id ID do blog desejado
- * @return null
- */
-function wpcpn_light_switch_to_blog( $blog_id ) {
-	global $wpdb;
-
-	$wpdb->prefix = $wpdb->base_prefix  . $blog_id;
-}
-
-
-function wpcpn_light_restore_to_main_blog(){
-	global $wpdb;
-
-	$wpdb->prefix = $wpdb->base_prefix;
-}
-
 function wpcpn_get_path_for_site( $site ) {
 	$network_site_url = str_replace('http://', '', network_site_url());
     $network_site_url = str_replace('www.','', $network_site_url);
@@ -113,8 +94,6 @@ function wpcpn_show_posts_section( $group_name, $section_name, Array $template, 
 		} else {
 			wpcpn_show_posts($section_posts, $template);
 		}
-	} else {
-		echo '<p>Seção não definida.</p>';
 	}
 }
 

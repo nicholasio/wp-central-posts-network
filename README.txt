@@ -3,7 +3,7 @@ Contributors: nicholas_io
 Tags: multisite, posts-selector, global,posts
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ This plugin adds a UI on the main site admin panel of a Network that let you cho
 This plugin only works with multisite and must be network activated
 
 = How it works and How to Use =
-To use the plugin you need do write some code in a hook filter. Please read our README.md file in our GitHub](https://github.com/nicholasio/wp-central-posts-network/blob/master/README.md)
+To use the plugin you need do write some code in a hook filter. Please read our README.md file in our [GitHub](https://github.com/nicholasio/wp-central-posts-network/blob/master/README.md)
 
 == Installation ==
 

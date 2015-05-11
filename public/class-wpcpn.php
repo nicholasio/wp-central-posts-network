@@ -32,7 +32,15 @@ class WPCPN {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.0.0';
+	const VERSION = '1.0.2';
+
+	/**
+	 * Version of the database tables for this plugin
+	 * @since 1.0.2
+	 *
+	 * @var string
+	 */
+	const TABLES_VERSION = '1.0.1';
 
 	/**
 	 *
@@ -63,15 +71,15 @@ class WPCPN {
 	 * @since     1.0.0
 	 */
 	private function __construct() {
-		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 		add_action( 'init', array( $this, 'load_plugin_textdomain') );
+		add_action( 'init', array( $this, 'upgrade') );
 
 		self::$cache_config = apply_filters( 'wpcpn_cache_config', false );
 	}
 
 	/**
-	 * Return an instance of theclass.
+	 * Return an instance of the class.
 	 *
 	 * @since     1.0.0
 	 *
@@ -116,7 +124,7 @@ class WPCPN {
 			restore_current_blog();
 
 		} else {
-			echo "<p>Você precisa do Multisite Habilitado</p>";
+			_e("You need Multisite enabled", "wpcpn");
 			die();
 		}
 	}
@@ -177,6 +185,7 @@ class WPCPN {
 
 		$sql = 'CREATE TABLE ' . $table_name .' (
 			ID bigint(11) NOT NULL AUTO_INCREMENT,
+			orig_blog_id bigint(11) NOT NULL DEFAULT 1,
 			blog_id bigint(11) NOT NULL,
 			post_id bigint(11) NOT NULL,
 			created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -190,11 +199,28 @@ class WPCPN {
 
 		dbDelta($sql);
 
-		$tables_version = '1.0.0';
-
-		update_option('wpcpn_db_version', $tables_version);
+		update_site_option('wpcpn_db_version', self::TABLES_VERSION);
 	}
 
+	/**
+	 * Fired for each blog when the plugin is activated.
+	 *
+	 * @since    1.0.0
+	 */
+	private static function main_single_activate() {
+		flush_rewrite_rules();
+	}
+
+	/**
+	 * Checks if we need to perform a database upgrade
+	 * Runs on init
+	 * @since 1.0.2
+	 */
+	public function upgrade() {
+		if ( get_site_option('wpcpn_db_version') !== self::TABLES_VERSION ) {
+			self::activate( true );
+		}
+	}
 
 	/**
 	 * Get all blog ids of blogs in the current network that are:
@@ -217,16 +243,6 @@ class WPCPN {
 
 		return $wpdb->get_col( $sql );
 
-	}
-
-	/**
-	 * Fired for each blog when the plugin is activated.
-	 *
-	 * @since    1.0.0
-	 */
-	private static function main_single_activate() {
-		//self::rewrite_rules();
-		flush_rewrite_rules();
 	}
 
 

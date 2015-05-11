@@ -47,7 +47,7 @@ class WPCPN_Post_Selector {
 
 		$status = apply_filters('wpcpn_activate_featured_requests', true);
 
-		if ( $status ) {
+		if ( $status && WPCPN_IS_MAIN_SITE ) {
 			 add_submenu_page(
 				$this->plugin_slug,
 				__('Featured Requests', 'wpcpn'),
@@ -120,7 +120,6 @@ class WPCPN_Post_Selector {
 			} else {
 				$post_types = array('post');
 			}
-
 		}
 
 
