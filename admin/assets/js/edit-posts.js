@@ -44,7 +44,6 @@
 													'message' :  reason,
 												},
 												success: function( result ) {
-													console.log(result);
 													if ( result == 1)
 														alert(EditPosts.request_duplicate);
 													else if ( result == 2)
