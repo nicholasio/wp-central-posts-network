@@ -40,6 +40,15 @@ class WPCPN_Admin {
 	 */
 	public $post_selector;
 
+		/**
+	 * Holds a reference to the post selector class
+	 *
+	 * @since 1.0.3
+	 *
+	 * @var Object
+	 */
+	public $wpcpn_requests;
+
 
 	/**
 	 * Initialize the plugin by loading admin scripts & styles and adding a
@@ -63,6 +72,8 @@ class WPCPN_Admin {
 		$status = apply_filters('wpcpn_activate_featured_requests', true );
 
 		if ( get_current_blog_id() != 1 && $status ) {
+				$this->wpcpn_requests = new WPCPN_Requests();
+
 				add_filter( 'post_row_actions', array( $this, 'post_row_actions') );
 				add_filter( 'manage_edit-post_columns', array($this, 'add_post_columns') );
 				add_action( 'manage_posts_custom_column' , array( $this, 'post_custom_columns' ) );
@@ -141,7 +152,7 @@ class WPCPN_Admin {
 				$request = WPCPN_Requests::get_request($blog_id, $post_id);
 
 				if ( $request == NULL )
-					echo _('Unsolicited', 'wpcpn');
+					echo __('Unsolicited', 'wpcpn');
 				else {
 
 					if ( $request->status == 'AW' )

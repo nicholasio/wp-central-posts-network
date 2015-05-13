@@ -35,33 +35,29 @@ class WPCPN_Requests {
 		$blog_id = (int) $_GET['blog_id'];
 		$message = esc_sql( $_GET['message'] );
 
-		global $wpdb;
-
-
-		echo self::insert_request( $blog_id, $post_id, $message );
+		echo self::insert_request( $blog_id, $post_id, $message, 1 );
 
 		die();
 	}
 
-	public static function insert_request( $blog_id, $post_id, $message) {
+	public static function insert_request( $blog_id, $post_id, $message, $orig_blog_id = 1) {
 		global $wpdb;
 
 		$count = $wpdb->get_var(
-		 	$wpdb->prepare('SELECT COUNT(ID) FROM ' . self::get_table_name() . ' WHERE blog_id = %d AND post_id = %d AMD orig_blog_id = %d' ,
+		 	$wpdb->prepare('SELECT COUNT(ID) FROM ' . self::get_table_name() . ' WHERE blog_id = %d AND post_id = %d AND orig_blog_id = %d' ,
 		 		array(
 		 			$blog_id,
 		 			$post_id,
-		 			get_current_blog_id()
+		 			$orig_blog_id
 		 		)
 		 	)
 		);
-
 		if ( $count > 0 ) {
 			return self::REQUEST_DUPLICATE;
 		} else {
 			$wpdb->insert( self::get_table_name(),
 				array(
-					'orig_blog_id' => get_current_blog_id(),
+					'orig_blog_id' => $orig_blog_id,
 					'blog_id' => $blog_id,
 					'post_id' => $post_id,
 					'message' => $message
@@ -122,6 +118,7 @@ class WPCPN_Requests {
 		}
 
 		global $wpdb;
+
 		$wpdb->update( self::get_table_name(),
 			$values,
 			array(
@@ -140,7 +137,7 @@ class WPCPN_Requests {
 		return true;
 	}
 
-	public static function get_request( $blog_id, $post_id ) {
+	public static function get_request( $blog_id, $post_id, $orig_blog_id = 1 ) {
 
 		global $wpdb;
 		$row = $wpdb->get_row(
@@ -148,7 +145,7 @@ class WPCPN_Requests {
 		 		array(
 		 			$blog_id,
 		 			$post_id,
-		 			get_current_blog_id()
+		 			$orig_blog_id
 		 		)
 		 	)
 		);

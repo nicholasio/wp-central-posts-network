@@ -95,8 +95,8 @@ class WPCPN_Post_Selector_Model {
 				$arrPosts['posts'][] = array('blog_id' => (int) $pieces[0],'post_id' => (int) $pieces[1]);
 
 				//If we have pending requests for this post, we need to update it status
-				if ( ! WPCPN_Requests::get_request($pieces[0], $pieces[1]) ) {
-					WPCPN_Requests::insert_request($pieces[0], $pieces[1], __('Published on the main site by the super admin.', 'wpcpn'));
+				if ( ! WPCPN_Requests::get_request($pieces[0], $pieces[1], get_current_blog_id() ) ) {
+					WPCPN_Requests::insert_request($pieces[0], $pieces[1], __('Published on the main site by the super admin.', 'wpcpn'), get_current_blog_id() );
 				}
 
 				WPCPN_Requests::publish($pieces[0], $pieces[1]);
