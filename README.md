@@ -112,7 +112,7 @@ By default, admins of the sites can request that a single post shows up on the m
 
 This functionality can be deactivate by using the following code:
 ```php
-add_filter('wpcpn_activate_feature_requests', 'mysite_wpcpn_disable_featured_requests');
+add_filter('wpcpn_activate_featured_requests', 'mysite_wpcpn_disable_featured_requests');
 function mysite_wpcpn_disable_featured_requests( $status ) {
 	return false;
 }
