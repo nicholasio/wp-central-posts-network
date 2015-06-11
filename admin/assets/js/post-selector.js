@@ -137,9 +137,7 @@
 				var $ajaxLoader       = this.$posts_to_choose.siblings('.wpcpn-ajax-loader');
 				var $btnSavePostList  = this.$btnSavePostList;
 
-				_$posts_to_choose.find(" > li ").fadeOut('fast', function() {
-					_$posts_to_choose.html('');
-				});
+				_$posts_to_choose.html('');
 
 				this.loading( true, $ajaxLoader, $btnSavePostList );
 
@@ -258,10 +256,12 @@
 					$o_li.attr('data-state', elState.NOT_SELECTED );
 
 					that.savePostList();
+
+					var nPosts = parseInt( that.$currentSection.attr('data-nposts') );
+					that.$currentSection.attr('data-nposts', nPosts - 1);
 				});
 
-				var nPosts = parseInt( this.$currentSection.attr('data-nposts') );
-				this.$currentSection.attr('data-nposts', nPosts - 1);
+
 
 				return false;
 			},
