@@ -53,7 +53,7 @@ have issues with perfomance try to use a cache plugin like WP Super Cache and W3
 == Changelog ==
 
 = 1.0.5 =
-* Fixed a PHP Warning when there aren't no Posts selected to be displayed in a section
+* Fixed a PHP Warning when there aren't Posts selected to be displayed in a section
 * WordPress 4.3 compatibility
 
 
