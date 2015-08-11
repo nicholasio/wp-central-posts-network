@@ -2,8 +2,8 @@
 Contributors: nicholas_io
 Tags: multisite, posts-selector, global,posts
 Requires at least: 4.1
-Tested up to: 4.2.2
-Stable tag: 1.0.4
+Tested up to: 4.3
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,12 @@ have issues with perfomance try to use a cache plugin like WP Super Cache and W3
 2. The posts displaying on the main site
 
 3. The code needed.
+
+== Changelog ==
+
+= 1.0.5 =
+* Fixed a PHP Warning when there aren't no Posts selected to be displayed in a section
+* WordPress 4.3 compatibility
 
 
 == Contribute ==

@@ -118,11 +118,13 @@ function wpcpn_show_posts( $posts, Array $template ) {
 
 function wpcpn_get_posts_section(  $group_name, $section_name, $params = array() ) {
 	$section 	= wpcpn_get_posts_list( $group_name, $section_name );
-	$section    = $section['posts'];
 
-	if ( ! is_array($section) ) {
+	if ( ! isset( $section['posts'] ) ) {
 		return false;
 	}
+
+    $section    = $section['posts'];
+
 
 	$params 	= wp_parse_args($params,
 					array(

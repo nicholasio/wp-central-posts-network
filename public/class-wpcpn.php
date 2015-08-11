@@ -32,7 +32,7 @@ class WPCPN {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.0.4';
+	const VERSION = '1.0.5';
 
 	/**
 	 * Version of the database tables for this plugin

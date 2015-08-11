@@ -50,7 +50,7 @@
 					<div class="wpcpn-area">
 						<ul class="connectedSortable sortable wpcpn-posts-selected">
 							<?php
-								if ( is_array($posts_selected['posts']) ) :
+								if ( isset( $posts_selected['posts'] ) && is_array( $posts_selected['posts'] ) ) :
 									foreach($posts_selected['posts'] as $post) :
 											$post_id = $post['post_id'];
 											$blog_id = $post['blog_id'];
