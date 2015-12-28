@@ -1,14 +1,11 @@
 <?php
 
 /**
- * Plugin class. This class should ideally be used to work with the
- * administrative side of the WordPress site.
+ * WPCPN Admin class
  *
  * @package WPCPN_Admin
  * @author  Nícholas André <nicholasandre@ufersa.edu.br>
  */
-
-
 class WPCPN_Admin {
 
 	/**
